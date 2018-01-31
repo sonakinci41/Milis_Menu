@@ -89,7 +89,7 @@ class Uyg_Stacked(QWidget):
 
     def uygulama_guncelle(self):
         """Ara sınıfını kullnarak arama yapıp değişkenlere atıyoruz"""
-        aranan = uygulama_ara.Ara()
+        aranan = uygulama_ara.Ara(self)
         self.uygulamalar = aranan.uygulamalar
         self.kategori_sozluk = aranan.kategori_sozluk
 

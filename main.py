@@ -1,5 +1,5 @@
-import sys
-import uyg_stacked, int_stacked
+import sys,os
+import uyg_stacked, int_stacked, dosya_stacked
 from PyQt5.QtWidgets import (QWidget,QApplication,QLineEdit,QGridLayout,QPushButton,QStackedWidget)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, Qt
@@ -10,6 +10,9 @@ class MerkezPencere(QWidget):
         self.pencere_boyut = (500,200)
         self.pencere_konum = (250,250)
         self.setFixedSize(QSize(self.pencere_boyut[0],self.pencere_boyut[1]))
+
+        self.sistem_dili = "tr"
+        self.aranacak_dizin = os.path.expanduser("~")
 
         kutu = QGridLayout()
         kutu.setContentsMargins(0,0,0,0)
@@ -47,6 +50,8 @@ class MerkezPencere(QWidget):
         kutu.addWidget(self.arama_sk,1,1,3,1)
         self.uygulama_bolumu = uyg_stacked.Uyg_Stacked(self)
         self.arama_sk.addWidget(self.uygulama_bolumu)
+        self.dosya_bolumu = dosya_stacked.Dosya_Stacked(self)
+        self.arama_sk.addWidget(self.dosya_bolumu)
         self.internet_bolumu = int_stacked.Int_Stacked(self)
         self.arama_sk.addWidget(self.internet_bolumu)
 
@@ -72,11 +77,12 @@ class MerkezPencere(QWidget):
     def internet_pb_basildi(self):
         self.button_ayarla(3)
         self.aktif_bolum = "internet"
-        self.arama_sk.setCurrentIndex(1)
+        self.arama_sk.setCurrentIndex(2)
 
     def dosyalar_pb_basildi(self):
         self.button_ayarla(2)
         self.aktif_bolum = "dosya"
+        self.arama_sk.setCurrentIndex(1)
 
     def uyg_pb_basildi(self):
         self.button_ayarla(1)
@@ -87,6 +93,8 @@ class MerkezPencere(QWidget):
         """Arama barındaki kelime değişince bu fonksiyon çalışıp ilgili fonkisyonu çağırıyor"""
         if self.aktif_bolum == "uygulama":
             self.uygulama_bolumu.aranan_degisti(kelime)
+        elif self.aktif_bolum == "dosya":
+            self.dosya_bolumu.aranan_degisti(kelime)
         elif self.aktif_bolum == "internet":
             self.internet_bolumu.aranan_degisti(kelime)
 
@@ -94,16 +102,22 @@ class MerkezPencere(QWidget):
         if olay.key() == Qt.Key_Return:
             if self.aktif_bolum == "uygulama":
                 self.uygulama_bolumu.enter_basildi()
+            elif self.aktif_bolum == "dosya":
+                self.dosya_bolumu.enter_basildi()
             elif self.aktif_bolum == "internet":
                 self.internet_bolumu.enter_basildi()
         elif olay.key() == Qt.Key_Up:
             if self.aktif_bolum == "uygulama":
                 self.uygulama_bolumu.yukari_basildi()
+            elif self.aktif_bolum == "dosya":
+                self.dosya_bolumu.yukari_basildi()
             elif self.aktif_bolum == "internet":
                 self.internet_bolumu.yukari_basildi()
         elif olay.key() == Qt.Key_Down:
             if self. aktif_bolum == "uygulama":
                 self.uygulama_bolumu.asagi_basildi()
+            elif self.aktif_bolum == "dosya":
+                self.dosya_bolumu.asagi_basildi()
             elif self.aktif_bolum == "internet":
                 self.internet_bolumu.asagi_basildi()
 

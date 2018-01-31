@@ -2,6 +2,7 @@ import os
 
 class Ara(object):
     def __init__(self, ebeveyn=None):
+        self.ebeveyn = ebeveyn
         self.uygulamalar = {}
         self.kategori_sozluk = {"Settings":[],"AudioVideo":[],"Education":[],"Development":[],
                                 "Graphics":[],"Network":[],"Office":[],"System":[],"Other":[]}
@@ -53,6 +54,7 @@ class Ara(object):
         simge = None
         kategoriler = None
         dongu = False
+        aranan_dil = "Name[{}]=".format(self.ebeveyn.ebeveyn.sistem_dili)
         for satir in okunan_liste:
             if satir[0:15] == "[Desktop Entry]":
                 dongu = True
@@ -67,4 +69,6 @@ class Ara(object):
                     simge = satir[5:-1]
                 elif satir[0:11] == "Categories=":
                     kategoriler = satir[11:-1]
+                elif satir[0:9] == aranan_dil:
+                    isim = satir[9:-1]
         return [isim,komut,simge,kategoriler]

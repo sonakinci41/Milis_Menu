@@ -1,6 +1,6 @@
-import requests,os
+import requests
 from PyQt5.QtWidgets import (QWidget,QGridLayout,QComboBox,QListWidget,QListWidgetItem)
-from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtCore import QThread, pyqtSignal, QTimer, QProcess
 
 class Int_Stacked(QWidget):
     def __init__(self, ebeveyn=None):
@@ -14,10 +14,19 @@ class Int_Stacked(QWidget):
         self.internet_sonuc_lw.itemDoubleClicked.connect(self.enter_basildi)
         kutu.addWidget(self.internet_sonuc_lw,0,0,1,1)
 
-    def aranan_degisti(self,kelime):
-        self.aranacak_kelime = kelime
+        self.zamanlayici = QTimer()
+        self.zamanlayici.timeout.connect(self.thread_baslat)
+
+    def thread_baslat(self):
+        self.zamanlayici.stop()
         th = Arama_Thread(self)
         th.start()
+
+    def aranan_degisti(self,kelime):
+        if kelime != "":
+            self.aranacak_kelime = kelime
+            self.zamanlayici.stop()
+            self.zamanlayici.start(1000)
 
     def listeye_ekle(self,sozluk):
         self.listedikler = sozluk
@@ -33,7 +42,8 @@ class Int_Stacked(QWidget):
         secili_item = self.internet_sonuc_lw.currentItem()
         if secili_item != None:
             secili = secili_item.text()
-            os.system("firefox '{}'&".format(self.listedikler[secili]))
+            pro = QProcess()
+            pro.startDetached("firefox",[self.listedikler[secili]])
 
     def yukari_basildi(self):
         secili_sira = self.internet_sonuc_lw.currentRow()
