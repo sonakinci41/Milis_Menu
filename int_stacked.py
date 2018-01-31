@@ -75,7 +75,9 @@ class Arama_Thread(QThread):
             for x in text[1:]:
                 a = x.split("</a>")[0]
                 yazi = a.split('">')[1]
-                sonuc[yazi.replace("<b>","").replace("</b>","")] = x.split("&amp")[0][7:]
+                gidecek = x.split("&amp")[0][7:]
+                gidecek = gidecek.replace("https://www.youtube.com/watch%3Fv%3D","https://www.youtube.com/watch?v=")
+                sonuc[yazi.replace("<b>","").replace("</b>","")] = gidecek
             self.islem_tamam.emit(sonuc)
         except:
             return False
