@@ -136,17 +136,19 @@ class Uyg_Stacked(QWidget):
             for i in liste:
                 uygulama = self.uygulamalar[i]
                 ikon=uygulama[2]
-                paths=["/usr/share/pixmaps/","/usr/share/icons/Adwaita/48x48/apps/"]
+                paths=["/usr/share/pixmaps/","/usr/share/icons/Adwaita/32x32/apps/"]
                 uzantilar=["png","svg","xpm"]
-                ikinci = None
+                bulundu=False
                 for uzanti in uzantilar:
                     for path in paths:
-                        if uygulama[2] != None and os.path.exists(path+"/"+ikon+"."+uzanti):
-                            ikinci = QIcon(path+"/"+ikon+"."+uzanti)
-                            break
-                if ikinci == None:
-                    ikinci = QIcon("./simgeler/bilinmeyen.svg")
-                liste_maddesi = QListWidgetItem(QIcon.fromTheme(uygulama[2], ikinci), uygulama[0])
+                        if ikon != None and os.path.exists(path+ikon+"."+uzanti):
+                           liste_maddesi = QListWidgetItem(QIcon(path+ikon+"."+uzanti), uygulama[0])
+                           bulundu=True
+                           break
+                        else:
+                           liste_maddesi = QListWidgetItem(QIcon.fromTheme(uygulama[2],QIcon("./simgeler/bilinmeyen.svg")), uygulama[0])
+                    if bulundu:
+                       break
                 self.uygulama_ara_lw.addItem(liste_maddesi)
             self.uygulama_ara_lw.setCurrentRow(0)
 
