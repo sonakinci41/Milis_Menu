@@ -135,7 +135,6 @@ class Uyg_Stacked(QWidget):
             liste.sort()
             for i in liste:
                 uygulama = self.uygulamalar[i]
-                uygulama = self.uygulamalar[i]
                 ikon=uygulama[2]
                 paths=["/usr/share/pixmaps/","/usr/share/icons/Adwaita/48x48/apps/"]
                 uzantilar=["png","svg","xpm"]
