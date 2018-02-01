@@ -142,7 +142,7 @@ class Uyg_Stacked(QWidget):
                 for uzanti in uzantilar:
                     for path in paths:
                         if uygulama[2] != None and os.path.exists(path+"/"+ikon+"."+uzanti):
-                            ikinci = QIcon(path+ikon+uzanti)
+                            ikinci = QIcon(path+"/"+ikon+"."+uzanti)
                             break
                 if ikinci == None:
                     ikinci = QIcon("./simgeler/bilinmeyen.svg")
