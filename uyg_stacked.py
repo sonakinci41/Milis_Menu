@@ -135,7 +135,14 @@ class Uyg_Stacked(QWidget):
             liste.sort()
             for i in liste:
                 uygulama = self.uygulamalar[i]
-                liste_maddesi = QListWidgetItem(QIcon.fromTheme(uygulama[2]), uygulama[0])
+                if uygulama[2] != None and os.path.exists("/usr/share/pixmaps/"+uygulama[2]+".png"):
+                    liste_maddesi = QListWidgetItem(QIcon("/usr/share/pixmaps/"+uygulama[2]+".png"), uygulama[0])
+                elif uygulama[2] != None and os.path.exists("/usr/share/pixmaps/"+uygulama[2]+".svg"):
+                    liste_maddesi = QListWidgetItem(QIcon("/usr/share/pixmaps/" + uygulama[2] + ".svg"), uygulama[0])
+                elif uygulama[2] != None and os.path.exists("/usr/share/pixmaps/"+uygulama[2]+".xpm"):
+                    liste_maddesi = QListWidgetItem(QIcon("/usr/share/pixmaps/" + uygulama[2] + ".xpm"), uygulama[0])
+                else:
+                    liste_maddesi = QListWidgetItem(QIcon.fromTheme(uygulama[2],QIcon("./simgeler/bilinmeyen.svg")), uygulama[0])
                 self.uygulama_ara_lw.addItem(liste_maddesi)
             self.uygulama_ara_lw.setCurrentRow(0)
 
