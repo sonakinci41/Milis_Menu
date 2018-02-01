@@ -54,7 +54,7 @@ class Ara(object):
         simge = None
         kategoriler = None
         dongu = False
-        aranan_dil = "Name[{}]=".format(self.ebeveyn.ebeveyn.sistem_dili)
+        tum_isimler = []
         for satir in okunan_liste:
             if satir[0:15] == "[Desktop Entry]":
                 dongu = True
@@ -63,12 +63,17 @@ class Ara(object):
             if dongu:
                 if satir[0:5] == "Name=":
                     isim = satir[5:-1]
+                    tum_isimler.append(isim)
                 elif satir[0:5] == "Exec=":
                     komut = satir[5:-1]
                 elif satir[0:5] == "Icon=":
                     simge = satir[5:-1]
                 elif satir[0:11] == "Categories=":
                     kategoriler = satir[11:-1]
-                elif satir[0:9] == aranan_dil:
-                    isim = satir[9:-1]
-        return [isim,komut,simge,kategoriler]
+                elif satir[0:9] == "Name[{}]=".format(self.ebeveyn.ebeveyn.sistem_dili):
+                    tum_isimler.append(satir[9:-1])
+                elif satir[0:8] == "Comment=":
+                    tum_isimler.append(satir[8:-1])
+                elif satir[0:12] == "Comment[{}]=".format(self.ebeveyn.ebeveyn.sistem_dili):
+                    tum_isimler.append(satir[12:-1])
+        return [isim,komut,simge,kategoriler,tum_isimler]
