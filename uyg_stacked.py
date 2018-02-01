@@ -83,8 +83,10 @@ class Uyg_Stacked(QWidget):
         """Aranmak istenen uygulamayı arayıp geri dönüt vereceğiz"""
         bulunanlar = []
         for uygulama in self.uygulamalar.keys():
-            if self.arama_kontrol(uygulama,kelime):
-                bulunanlar.append(uygulama)
+            for isim in self.uygulamalar[uygulama][4]:
+                if self.arama_kontrol(isim,kelime):
+                    bulunanlar.append(uygulama)
+                    break
         return bulunanlar
 
     def uygulama_guncelle(self):

@@ -78,16 +78,22 @@ class MerkezPencere(QWidget):
         self.button_ayarla(3)
         self.aktif_bolum = "internet"
         self.arama_sk.setCurrentIndex(2)
+        self.arama_le.setFocus()
+        self.aranan_degisti(self.arama_le.text())
 
     def dosyalar_pb_basildi(self):
         self.button_ayarla(2)
         self.aktif_bolum = "dosya"
         self.arama_sk.setCurrentIndex(1)
+        self.arama_le.setFocus()
+        self.aranan_degisti(self.arama_le.text())
 
     def uyg_pb_basildi(self):
         self.button_ayarla(1)
         self.aktif_bolum = "uygulama"
         self.arama_sk.setCurrentIndex(0)
+        self.arama_le.setFocus()
+        self.aranan_degisti(self.arama_le.text())
 
     def aranan_degisti(self,kelime):
         """Arama barındaki kelime değişince bu fonksiyon çalışıp ilgili fonkisyonu çağırıyor"""
