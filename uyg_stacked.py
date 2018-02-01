@@ -135,14 +135,22 @@ class Uyg_Stacked(QWidget):
             liste.sort()
             for i in liste:
                 uygulama = self.uygulamalar[i]
-                if uygulama[2] != None and os.path.exists("/usr/share/pixmaps/"+uygulama[2]+".png"):
-                    liste_maddesi = QListWidgetItem(QIcon("/usr/share/pixmaps/"+uygulama[2]+".png"), uygulama[0])
-                elif uygulama[2] != None and os.path.exists("/usr/share/pixmaps/"+uygulama[2]+".svg"):
-                    liste_maddesi = QListWidgetItem(QIcon("/usr/share/pixmaps/" + uygulama[2] + ".svg"), uygulama[0])
-                elif uygulama[2] != None and os.path.exists("/usr/share/pixmaps/"+uygulama[2]+".xpm"):
-                    liste_maddesi = QListWidgetItem(QIcon("/usr/share/pixmaps/" + uygulama[2] + ".xpm"), uygulama[0])
-                else:
-                    liste_maddesi = QListWidgetItem(QIcon.fromTheme(uygulama[2],QIcon("./simgeler/bilinmeyen.svg")), uygulama[0])
+                uygulama = self.uygulamalar[i]
+                ikon=uygulama[2]
+                paths=["/usr/share/pixmaps/","/usr/share/icons/Adwaita/48x48/apps/"]
+                uzantilar=["png","svg","xpm"]
+                bulundu=False
+                for uzanti in uzantilar:
+				    for path in paths:
+                        if uygulama[2] != None and os.path.exists(path+ikon+uzanti):
+                            liste_maddesi = QListWidgetItem(QIcon(path+ikon+uzanti), uygulama[0])
+                            bulundu=True
+                            break
+                        else:
+                            liste_maddesi = QListWidgetItem(QIcon.fromTheme(uygulama[2],QIcon("./simgeler/bilinmeyen.svg")), uygulama[0])
+                        if bulundu:
+                            break
+                self.uygulama_ara_lw.addItem(liste_maddesi)
                 self.uygulama_ara_lw.addItem(liste_maddesi)
             self.uygulama_ara_lw.setCurrentRow(0)
 
