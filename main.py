@@ -1,15 +1,16 @@
 import sys,os
 import uyg_stacked, int_stacked, dosya_stacked
-from PyQt5.QtWidgets import (QWidget,QApplication,QLineEdit,QGridLayout,QPushButton,QStackedWidget)
+from PyQt5.QtWidgets import (QWidget,QApplication,QLineEdit,QGridLayout,QPushButton,QStackedWidget,QSpacerItem,
+                             QSizePolicy)
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtCore import QSize, Qt, QProcess
 
 class MerkezPencere(QWidget):
     def __init__(self, ebeveyn=None):
         super(MerkezPencere, self).__init__(ebeveyn)
-        self.pencere_boyut = (500,200)
+        self.pencere_boyut = (500,350)
         self.pencere_konum = (250,250)
-        self.setFixedSize(QSize(self.pencere_boyut[0],self.pencere_boyut[1]))
+        self.setGeometry(0,0,self.pencere_boyut[0],self.pencere_boyut[1])
 
         self.sistem_dili = "tr"
         self.aranacak_dizin = os.path.expanduser("~")
@@ -44,10 +45,32 @@ class MerkezPencere(QWidget):
         self.internet_pb.setIconSize(QSize(44,44))
         kutu.addWidget(self.internet_pb,3,0,1,1)
 
+        bosluk = QSpacerItem(20,40,QSizePolicy.Maximum,QSizePolicy.Minimum)
+        kutu.addItem(bosluk,4,0,1,1)
+
+        self.cikis_pb = QPushButton()
+        self.cikis_pb.setIcon(QIcon("simgeler/cikis.svg"))
+        self.cikis_pb.setFixedSize(QSize(48,48))
+        self.cikis_pb.setIconSize(QSize(44,44))
+        kutu.addWidget(self.cikis_pb,5,0,1,1)
+
+        self.yen_bas_pb = QPushButton()
+        self.yen_bas_pb.setIcon(QIcon("simgeler/yeniden_baslat.svg"))
+        self.yen_bas_pb.setFixedSize(QSize(48,48))
+        self.yen_bas_pb.setIconSize(QSize(44,44))
+        kutu.addWidget(self.yen_bas_pb,6,0,1,1)
+
+        self.kapat_pb = QPushButton()
+        self.kapat_pb.setIcon(QIcon("simgeler/kapat.svg"))
+        self.kapat_pb.setFixedSize(QSize(48,48))
+        self.kapat_pb.setIconSize(QSize(44,44))
+        kutu.addWidget(self.kapat_pb,7,0,1,1)
+
+
         self.aktif_bolum = "uygulama"
 
         self.arama_sk = QStackedWidget()
-        kutu.addWidget(self.arama_sk,1,1,3,1)
+        kutu.addWidget(self.arama_sk,1,1,7,1)
         self.uygulama_bolumu = uyg_stacked.Uyg_Stacked(self)
         self.arama_sk.addWidget(self.uygulama_bolumu)
         self.dosya_bolumu = dosya_stacked.Dosya_Stacked(self)
@@ -59,6 +82,21 @@ class MerkezPencere(QWidget):
         self.uygulamalar_pb.clicked.connect(self.uyg_pb_basildi)
         self.dosyalar_pb.clicked.connect(self.dosyalar_pb_basildi)
         self.internet_pb.clicked.connect(self.internet_pb_basildi)
+        self.cikis_pb.clicked.connect(self.cikis_basildi)
+        self.yen_bas_pb.clicked.connect(self.yen_bas_basildi)
+        self.kapat_pb.clicked.connect(self.kapat_basildi)
+
+    def cikis_basildi(self):
+        pro = QProcess()
+        pro.startDetached("pkill", ["-KILL","-u",os.path.expanduser("~").split("/")[-1]])
+
+    def yen_bas_basildi(self):
+        pro = QProcess()
+        pro.startDetached("shutdown", ["-r","now"])
+
+    def kapat_basildi(self):
+        pro = QProcess()
+        pro.startDetached("shutdown", ["-h","now"])
 
     def button_ayarla(self,secilen):
         if secilen == 1:
