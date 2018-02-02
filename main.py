@@ -1,4 +1,4 @@
-import sys,os
+import sys,os, getpass
 import uyg_stacked, int_stacked, dosya_stacked
 from PyQt5.QtWidgets import (QWidget,QApplication,QLineEdit,QGridLayout,QPushButton,QStackedWidget,QSpacerItem,
                              QSizePolicy)
@@ -88,7 +88,7 @@ class MerkezPencere(QWidget):
 
     def cikis_basildi(self):
         pro = QProcess()
-        pro.startDetached("pkill", ["-KILL","-u",os.path.expanduser("~").split("/")[-1]])
+        pro.startDetached("pkill", ["-KILL","-u",getpass.getuser()])
 
     def yen_bas_basildi(self):
         pro = QProcess()
