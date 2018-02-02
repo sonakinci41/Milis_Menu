@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import (QWidget,QGridLayout,QComboBox,QListWidget,QListWidgetItem)
+from PyQt5.QtWidgets import (QWidget,QGridLayout,QComboBox,QListWidget,QListWidgetItem,qApp)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QTimer,QThread,pyqtSignal, QMimeDatabase, QProcess
 import contextlib,subprocess
@@ -21,6 +21,7 @@ class Dosya_Stacked(QWidget):
     def thread_baslat(self):
         self.zamanlayici.stop()
         th = Arama_Thread(self)
+        self.thread_kontrol = True
         th.start()
         self.liste_uyg_say = 0
         self.dosya_sonuc_lw.clear()
@@ -29,7 +30,8 @@ class Dosya_Stacked(QWidget):
         if kelime != "":
             self.aranacak_kelime = kelime
             self.zamanlayici.stop()
-            self.zamanlayici.start(1000)
+            self.zamanlayici.start(500)
+            self.thread_kontrol = False
 
     def listeye_ekle(self,dosya):
         if dosya != "":
@@ -75,12 +77,14 @@ class Arama_Thread(QThread):
         stream = getattr(proc, stream)
         with contextlib.closing(stream):
             while True:
+                qApp.processEvents()
                 out = []
                 last = stream.read(1)
                 # Don't loop forever
                 if last == '' and proc.poll() is not None:
                     break
                 while last not in self.newlines:
+                    qApp.processEvents()
                     # Don't loop forever
                     if last == '' and proc.poll() is not None:
                         break
@@ -90,6 +94,7 @@ class Arama_Thread(QThread):
                 yield out
 
     def run(self):
+        a =[]
         aranan = ["find",self.ebeveyn.ebeveyn.aranacak_dizin,
                   "-iname","*{}*".format(self.ebeveyn.aranacak_kelime)]
         proc = subprocess.Popen(
@@ -100,4 +105,9 @@ class Arama_Thread(QThread):
             universal_newlines=True,
         )
         for line in self.unbuffered(proc):
-            self.islem_tamam.emit(line)
+            if self.ebeveyn.thread_kontrol:
+                self.islem_tamam.emit(line)
+                qApp.processEvents()
+            else:
+                proc.kill()
+                break

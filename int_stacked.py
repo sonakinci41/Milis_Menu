@@ -26,16 +26,17 @@ class Int_Stacked(QWidget):
         if kelime != "":
             self.aranacak_kelime = kelime
             self.zamanlayici.stop()
-            self.zamanlayici.start(1000)
+            self.zamanlayici.start(500)
 
     def listeye_ekle(self,sozluk):
         self.listedikler = sozluk
         self.internet_sonuc_lw.clear()
         if sozluk:
-            self.liste_uyg_say = len(list(sozluk.keys()))
+            self.liste_uyg_say = 0
             for i in sozluk.keys():
                 if sozluk[i][:3] != "?q=":
                     self.internet_sonuc_lw.addItem(i)
+                    self.liste_uyg_say += 1
             self.internet_sonuc_lw.setCurrentRow(0)
 
     def enter_basildi(self):
