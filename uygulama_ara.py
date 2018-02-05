@@ -38,15 +38,18 @@ class Ara(object):
             kategoriler = ["Unknown"]
         else:
             kategoriler = kategoriler.split(";")
+        eklendi = False
         for kategori in kategoriler:
             if kategori != "":
                 kontrol = self.kategori_sozluk.get(kategori,"Yok")
-                if kontrol == "Yok":
-                    if liste[0] not in self.kategori_sozluk["Other"]:
-                        self.kategori_sozluk["Other"].append(liste[0])
-                else:
+                if kontrol != "Yok":
                     if liste[0] not in kontrol:
                         kontrol.append(liste[0])
+                        eklendi = True
+        if not eklendi:
+            if liste[0] not in self.kategori_sozluk["Other"]:
+                self.kategori_sozluk["Other"].append(liste[0])
+
 
     def ayikla(self,okunan_liste,okunan):
         isim = None

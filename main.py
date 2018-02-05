@@ -12,6 +12,7 @@ class MerkezPencere(QWidget):
         self.pencere_konum = (0,350)
         self.setGeometry(0,0,self.pencere_boyut[0],self.pencere_boyut[1])
         self.move(self.pencere_konum[0],self.pencere_konum[1])
+        self.setWindowFlags(Qt.Popup)
 
         self.sistem_dili = "tr"
         self.aranacak_dizin = os.path.expanduser("~")
