@@ -1,7 +1,7 @@
 import sys,os, getpass
 import uyg_stacked, int_stacked, dosya_stacked
-from PyQt5.QtWidgets import (QWidget,QApplication,QLineEdit,QGridLayout,QPushButton,QStackedWidget,QSpacerItem,
-                             QSizePolicy)
+from PyQt5.QtWidgets import (QWidget,QApplication,QLineEdit,QHBoxLayout,QPushButton,QStackedWidget,QSpacerItem,
+                             QSizePolicy, QVBoxLayout, QMenu, QAction)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, Qt, QProcess
 
@@ -15,62 +15,63 @@ class MerkezPencere(QWidget):
         self.sistem_dili = "tr"
         self.aranacak_dizin = os.path.expanduser("~")
 
-        kutu = QGridLayout()
+        kutu = QVBoxLayout()
         kutu.setContentsMargins(0,0,0,0)
         self.setLayout(kutu)
 
-        self.arama_le = QLineEdit()
-        self.arama_le.textChanged.connect(self.aranan_degisti)
-        kutu.addWidget(self.arama_le,0,0,1,2)
+        ilk_yatay_kutu = QHBoxLayout()
+        ilk_yatay_kutu.setContentsMargins(0,0,0,0)
+        kutu.addLayout(ilk_yatay_kutu)
 
         self.uygulamalar_pb = QPushButton()
         self.uygulamalar_pb.setCheckable(True)
         self.uygulamalar_pb.setChecked(True)
         self.uygulamalar_pb.setIcon(QIcon("simgeler/uygulama.svg"))
-        self.uygulamalar_pb.setFixedSize(QSize(48,48))
-        self.uygulamalar_pb.setIconSize(QSize(44,44))
-        kutu.addWidget(self.uygulamalar_pb,1,0,1,1)
+        self.uygulamalar_pb.setFixedSize(QSize(36,36))
+        self.uygulamalar_pb.setIconSize(QSize(32,32))
+        ilk_yatay_kutu.addWidget(self.uygulamalar_pb)
 
         self.dosyalar_pb = QPushButton()
         self.dosyalar_pb.setCheckable(True)
         self.dosyalar_pb.setIcon(QIcon("simgeler/dosya.svg"))
-        self.dosyalar_pb.setFixedSize(QSize(48,48))
-        self.dosyalar_pb.setIconSize(QSize(44,44))
-        kutu.addWidget(self.dosyalar_pb,2,0,1,1)
+        self.dosyalar_pb.setFixedSize(QSize(36,36))
+        self.dosyalar_pb.setIconSize(QSize(32,32))
+        ilk_yatay_kutu.addWidget(self.dosyalar_pb)
 
         self.internet_pb = QPushButton()
         self.internet_pb.setCheckable(True)
         self.internet_pb.setIcon(QIcon("simgeler/internet.svg"))
-        self.internet_pb.setFixedSize(QSize(48,48))
-        self.internet_pb.setIconSize(QSize(44,44))
-        kutu.addWidget(self.internet_pb,3,0,1,1)
+        self.internet_pb.setFixedSize(QSize(36,36))
+        self.internet_pb.setIconSize(QSize(32,32))
+        ilk_yatay_kutu.addWidget(self.internet_pb)
 
-        bosluk = QSpacerItem(20,40,QSizePolicy.Maximum,QSizePolicy.Minimum)
-        kutu.addItem(bosluk,4,0,1,1)
+        self.arama_le = QLineEdit()
+        self.arama_le.setFixedHeight(36)
+        self.arama_le.textChanged.connect(self.aranan_degisti)
+        ilk_yatay_kutu.addWidget(self.arama_le)
 
-        self.cikis_pb = QPushButton()
-        self.cikis_pb.setIcon(QIcon("simgeler/cikis.svg"))
-        self.cikis_pb.setFixedSize(QSize(48,48))
-        self.cikis_pb.setIconSize(QSize(44,44))
-        kutu.addWidget(self.cikis_pb,5,0,1,1)
+        kapa_yb_cikis_pb = QMenu()
+        kapa_yb_cikis_pb.addAction(QAction(QIcon("simgeler/cikis.svg"), "Çıkış", self, triggered=self.cikis_basildi))
+        kapa_yb_cikis_pb.addAction(QAction(QIcon("simgeler/yeniden_baslat.svg"), "Yeniden Başlat", self, triggered=self.yen_bas_basildi))
+        kapa_yb_cikis_pb.addAction(QAction(QIcon("simgeler/kapat.svg"), "Kapat", self, triggered=self.kapat_basildi))
 
-        self.yen_bas_pb = QPushButton()
-        self.yen_bas_pb.setIcon(QIcon("simgeler/yeniden_baslat.svg"))
-        self.yen_bas_pb.setFixedSize(QSize(48,48))
-        self.yen_bas_pb.setIconSize(QSize(44,44))
-        kutu.addWidget(self.yen_bas_pb,6,0,1,1)
+        self.ayarlar_pb = QPushButton()
+        self.ayarlar_pb.setIcon(QIcon("simgeler/bilinmeyen.svg"))
+        self.ayarlar_pb.setFixedSize(QSize(36,36))
+        self.ayarlar_pb.setIconSize(QSize(32,32))
+        ilk_yatay_kutu.addWidget(self.ayarlar_pb)
 
-        self.kapat_pb = QPushButton()
-        self.kapat_pb.setIcon(QIcon("simgeler/kapat.svg"))
-        self.kapat_pb.setFixedSize(QSize(48,48))
-        self.kapat_pb.setIconSize(QSize(44,44))
-        kutu.addWidget(self.kapat_pb,7,0,1,1)
-
+        self.kapa_yb_cikis_pb = QPushButton()
+        self.kapa_yb_cikis_pb.setMenu(kapa_yb_cikis_pb)
+        self.kapa_yb_cikis_pb.setIcon(QIcon("simgeler/kapat.svg"))
+        self.kapa_yb_cikis_pb.setFixedSize(QSize(54,36))
+        self.kapa_yb_cikis_pb.setIconSize(QSize(32,32))
+        ilk_yatay_kutu.addWidget(self.kapa_yb_cikis_pb)
 
         self.aktif_bolum = "uygulama"
 
         self.arama_sk = QStackedWidget()
-        kutu.addWidget(self.arama_sk,1,1,7,1)
+        kutu.addWidget(self.arama_sk)
         self.uygulama_bolumu = uyg_stacked.Uyg_Stacked(self)
         self.arama_sk.addWidget(self.uygulama_bolumu)
         self.dosya_bolumu = dosya_stacked.Dosya_Stacked(self)
@@ -82,9 +83,10 @@ class MerkezPencere(QWidget):
         self.uygulamalar_pb.clicked.connect(self.uyg_pb_basildi)
         self.dosyalar_pb.clicked.connect(self.dosyalar_pb_basildi)
         self.internet_pb.clicked.connect(self.internet_pb_basildi)
-        self.cikis_pb.clicked.connect(self.cikis_basildi)
-        self.yen_bas_pb.clicked.connect(self.yen_bas_basildi)
-        self.kapat_pb.clicked.connect(self.kapat_basildi)
+        self.ayarlar_pb.clicked.connect(self.ayarlar_basildi)
+
+    def ayarlar_basildi(self):
+        pass
 
     def cikis_basildi(self):
         pro = QProcess()

@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import (QWidget,QGridLayout,QComboBox,QListWidget,QListWidgetItem)
+from PyQt5.QtWidgets import (QWidget,QGridLayout,QComboBox,QListWidget,QListWidgetItem,QPushButton)
 from PyQt5.QtGui import QIcon
 import uygulama_ara, os
 
@@ -11,73 +11,164 @@ class Uyg_Stacked(QWidget):
         uygulama_ara_kutu.setContentsMargins(0,0,0,0)
         self.setLayout(uygulama_ara_kutu)
 
-        self.uyg_kategoriler_cb = QComboBox()
-        self.uyg_kategoriler_cb.addItems(["Tüm Uygulamalar","Ayarlar","Çoklu Ortam","Eğtim",
-                                       "Geliştirme","Grafik","İnternet","Ofis","Sistem","Diğer"])
-        uygulama_ara_kutu.addWidget(self.uyg_kategoriler_cb)
+        tum_uyg_pb = QPushButton()
+        tum_uyg_pb.setFixedHeight(24)
+        tum_uyg_pb.setText("Tüm Uygulamalar")
+        tum_uyg_pb.setIcon(QIcon("simgeler/uygulama.svg"))
+        tum_uyg_pb.clicked.connect(self.tum_uyg_basildi)
+        tum_uyg_pb.setStyleSheet("Text-align:left;border:none;")
+        uygulama_ara_kutu.addWidget(tum_uyg_pb,0,0,1,1)
+
+        ayar_uyg_pb = QPushButton()
+        ayar_uyg_pb.setFixedHeight(24)
+        ayar_uyg_pb.setText("Ayarlar")
+        ayar_uyg_pb.setIcon(QIcon("simgeler/uyg_ayarlar.svg"))
+        ayar_uyg_pb.clicked.connect(self.ayar_uyg_basildi)
+        ayar_uyg_pb.setStyleSheet("Text-align:left;border:none;")
+        uygulama_ara_kutu.addWidget(ayar_uyg_pb,1,0,1,1)
+
+        cok_ort_uyg_pb = QPushButton()
+        cok_ort_uyg_pb.setFixedHeight(24)
+        cok_ort_uyg_pb.setText("Çoklu Ortam")
+        cok_ort_uyg_pb.setIcon(QIcon("simgeler/uyg_cok_ort.svg"))
+        cok_ort_uyg_pb.clicked.connect(self.cok_ort_uyg_basildi)
+        cok_ort_uyg_pb.setStyleSheet("Text-align:left;border:none;")
+        uygulama_ara_kutu.addWidget(cok_ort_uyg_pb,2,0,1,1)
+
+        egitim_uyg_pb = QPushButton()
+        egitim_uyg_pb.setFixedHeight(24)
+        egitim_uyg_pb.setText("Eğitim")
+        egitim_uyg_pb.setIcon(QIcon("simgeler/uyg_egitim.svg"))
+        egitim_uyg_pb.clicked.connect(self.egitim_uyg_basildi)
+        egitim_uyg_pb.setStyleSheet("Text-align:left;border:none;")
+        uygulama_ara_kutu.addWidget(egitim_uyg_pb,3,0,1,1)
+
+        gelistirme_uyg_pb = QPushButton()
+        gelistirme_uyg_pb.setFixedHeight(24)
+        gelistirme_uyg_pb.setText("Geliştirme")
+        gelistirme_uyg_pb.setIcon(QIcon("simgeler/uyg_gelistirme.svg"))
+        gelistirme_uyg_pb.clicked.connect(self.gelistirme_uyg_basildi)
+        gelistirme_uyg_pb.setStyleSheet("Text-align:left;border:none;")
+        uygulama_ara_kutu.addWidget(gelistirme_uyg_pb,4,0,1,1)
+
+        grafik_uyg_pb = QPushButton()
+        grafik_uyg_pb.setFixedHeight(24)
+        grafik_uyg_pb.setText("Grafik")
+        grafik_uyg_pb.setIcon(QIcon("simgeler/uyg_grafik.svg"))
+        grafik_uyg_pb.clicked.connect(self.grafik_uyg_basildi)
+        grafik_uyg_pb.setStyleSheet("Text-align:left;border:none;")
+        uygulama_ara_kutu.addWidget(grafik_uyg_pb,5,0,1,1)
+
+        internet_uyg_pb = QPushButton()
+        internet_uyg_pb.setFixedHeight(24)
+        internet_uyg_pb.setText("İnternet")
+        internet_uyg_pb.setIcon(QIcon("simgeler/uyg_internet.svg"))
+        internet_uyg_pb.clicked.connect(self.internet_uyg_basildi)
+        internet_uyg_pb.setStyleSheet("Text-align:left;border:none;")
+        uygulama_ara_kutu.addWidget(internet_uyg_pb,6,0,1,1)
+
+        ofis_uyg_pb = QPushButton()
+        ofis_uyg_pb.setFixedHeight(24)
+        ofis_uyg_pb.setText("Ofis")
+        ofis_uyg_pb.setIcon(QIcon("simgeler/uyg_ofis.svg"))
+        ofis_uyg_pb.clicked.connect(self.ofis_uyg_basildi)
+        ofis_uyg_pb.setStyleSheet("Text-align:left;border:none;")
+        uygulama_ara_kutu.addWidget(ofis_uyg_pb,7,0,1,1)
+
+        sistem_uyg_pb = QPushButton()
+        sistem_uyg_pb.setFixedHeight(24)
+        sistem_uyg_pb.setText("Sistem")
+        sistem_uyg_pb.setIcon(QIcon("simgeler/uyg_sistem.svg"))
+        sistem_uyg_pb.clicked.connect(self.sistem_uyg_basildi)
+        sistem_uyg_pb.setStyleSheet("Text-align:left;border:none;")
+        uygulama_ara_kutu.addWidget(sistem_uyg_pb,8,0,1,1)
+
+        diger_uyg_pb = QPushButton()
+        diger_uyg_pb.setFixedHeight(24)
+        diger_uyg_pb.setText("Diğer")
+        diger_uyg_pb.setIcon(QIcon("simgeler/uyg_diger.svg"))
+        diger_uyg_pb.clicked.connect(self.diger_uyg_basildi)
+        diger_uyg_pb.setStyleSheet("Text-align:left;border:none;")
+        uygulama_ara_kutu.addWidget(diger_uyg_pb,9,0,1,1)
+
 
         self.uygulama_ara_lw = QListWidget()
         self.uygulama_ara_lw.itemDoubleClicked.connect(self.enter_basildi)
-        uygulama_ara_kutu.addWidget(self.uygulama_ara_lw,1,0,1,1)
+        uygulama_ara_kutu.addWidget(self.uygulama_ara_lw,0,1,10,1)
 
         #Sinyaller
-        self.uyg_kategoriler_cb.currentTextChanged.connect(self.kategori_degisti)
-        self.kategori_degisti("Tüm Uygulamalar")
+        self.tum_uyg_basildi()
 
-
-    def kategori_degisti(self,kategori):
+    def tum_uyg_basildi(self):
         self.uygulama_ara_lw.clear()
-        if kategori == "Tüm Uygulamalar":
-            uygulamalar = list(self.uygulamalar.keys())
+        uygulamalar = list(self.uygulamalar.keys())
+        uygulamalar.sort()
+        self.listeye_ekle(uygulamalar)
+
+    def ayar_uyg_basildi(self):
+        self.uygulama_ara_lw.clear()
+        kontrol = self.kategori_sozluk.get("Settings", "Yok")
+        if kontrol != "Yok":
+            uygulamalar = list(kontrol)
             uygulamalar.sort()
             self.listeye_ekle(uygulamalar)
-        elif kategori == "Ayarlar":
-            kontrol = self.kategori_sozluk.get("Settings","Yok")
-            if kontrol != "Yok":
-                uygulamalar = list(kontrol)
-                uygulamalar.sort()
-                self.listeye_ekle(uygulamalar)
-        elif kategori == "Çoklu Ortam":
-            kontrol = self.kategori_sozluk.get("AudioVideo","Yok")
-            if kontrol != "Yok":
-                uygulamalar = list(kontrol)
-                uygulamalar.sort()
-                self.listeye_ekle(uygulamalar)
-        elif kategori == "Eğitim":
-            kontrol = self.kategori_sozluk.get("Education","Yok")
-            if kontrol != "Yok":
-                uygulamalar = list(kontrol)
-                self.listeye_ekle(uygulamalar)
-        elif kategori == "Geliştirme":
-            kontrol = self.kategori_sozluk.get("Development","Yok")
-            if kontrol != "Yok":
-                uygulamalar = list(kontrol)
-                self.listeye_ekle(uygulamalar)
-        elif kategori == "Grafik":
-            kontrol = self.kategori_sozluk.get("Graphics","Yok")
-            if kontrol != "Yok":
-                uygulamalar = list(kontrol)
-                self.listeye_ekle(uygulamalar)
-        elif kategori == "İnternet":
-            kontrol = self.kategori_sozluk.get("Network","Yok")
-            if kontrol != "Yok":
-                uygulamalar = list(kontrol)
-                self.listeye_ekle(uygulamalar)
-        elif kategori == "Ofis":
-            kontrol = self.kategori_sozluk.get("Office","Yok")
-            if kontrol != "Yok":
-                uygulamalar = list(kontrol)
-                self.listeye_ekle(uygulamalar)
-        elif kategori == "Sistem":
-            kontrol = self.kategori_sozluk.get("System","Yok")
-            if kontrol != "Yok":
-                uygulamalar = list(kontrol)
-                self.listeye_ekle(uygulamalar)
-        elif kategori == "Diğer":
-            kontrol = self.kategori_sozluk.get("Other","Yok")
-            if kontrol != "Yok":
-                uygulamalar = list(kontrol)
-                self.listeye_ekle(uygulamalar)
+
+    def cok_ort_uyg_basildi(self):
+        self.uygulama_ara_lw.clear()
+        kontrol = self.kategori_sozluk.get("AudioVideo", "Yok")
+        if kontrol != "Yok":
+            uygulamalar = list(kontrol)
+            uygulamalar.sort()
+            self.listeye_ekle(uygulamalar)
+
+    def egitim_uyg_basildi(self):
+        self.uygulama_ara_lw.clear()
+        kontrol = self.kategori_sozluk.get("Education", "Yok")
+        if kontrol != "Yok":
+            uygulamalar = list(kontrol)
+            self.listeye_ekle(uygulamalar)
+
+    def gelistirme_uyg_basildi(self):
+        self.uygulama_ara_lw.clear()
+        kontrol = self.kategori_sozluk.get("Development", "Yok")
+        if kontrol != "Yok":
+            uygulamalar = list(kontrol)
+            self.listeye_ekle(uygulamalar)
+
+    def grafik_uyg_basildi(self):
+        self.uygulama_ara_lw.clear()
+        kontrol = self.kategori_sozluk.get("Graphics", "Yok")
+        if kontrol != "Yok":
+            uygulamalar = list(kontrol)
+            self.listeye_ekle(uygulamalar)
+
+    def internet_uyg_basildi(self):
+        self.uygulama_ara_lw.clear()
+        kontrol = self.kategori_sozluk.get("Network", "Yok")
+        if kontrol != "Yok":
+            uygulamalar = list(kontrol)
+            self.listeye_ekle(uygulamalar)
+
+    def ofis_uyg_basildi(self):
+        self.uygulama_ara_lw.clear()
+        kontrol = self.kategori_sozluk.get("Office", "Yok")
+        if kontrol != "Yok":
+            uygulamalar = list(kontrol)
+            self.listeye_ekle(uygulamalar)
+
+    def sistem_uyg_basildi(self):
+        self.uygulama_ara_lw.clear()
+        kontrol = self.kategori_sozluk.get("System", "Yok")
+        if kontrol != "Yok":
+            uygulamalar = list(kontrol)
+            self.listeye_ekle(uygulamalar)
+
+    def diger_uyg_basildi(self):
+        self.uygulama_ara_lw.clear()
+        kontrol = self.kategori_sozluk.get("Other", "Yok")
+        if kontrol != "Yok":
+            uygulamalar = list(kontrol)
+            self.listeye_ekle(uygulamalar)
 
     def uygulama_ara(self,kelime):
         """Aranmak istenen uygulamayı arayıp geri dönüt vereceğiz"""
@@ -122,12 +213,10 @@ class Uyg_Stacked(QWidget):
         self.uygulama_ara_lw.clear()
         if kelime != "":
             kelime = kelime.lower()
-            self.uyg_kategoriler_cb.setDisabled(True)
             sonuc = self.uygulama_ara(kelime)
             self.listeye_ekle(sonuc)
         else:
-            self.uyg_kategoriler_cb.setDisabled(False)
-            self.uyg_kategoriler_cb.setCurrentText("Tüm Uygulamalar")
+            pass
 
     def listeye_ekle(self,liste):
         self.liste_uyg_say = len(liste)
