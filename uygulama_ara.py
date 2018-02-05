@@ -13,7 +13,7 @@ class Ara(object):
         dizin = os.listdir("/usr/share/applications/")
         for dosya in dizin:
             okunan = self.ac_ve_oku(dosya)
-            ayiklanmis = self.ayikla(okunan)
+            ayiklanmis = self.ayikla(okunan,dosya)
             if ayiklanmis[0] != None:
                 control = self.uygulamalar.get(ayiklanmis[0], "No")
                 if control == "No":
@@ -48,13 +48,13 @@ class Ara(object):
                     if liste[0] not in kontrol:
                         kontrol.append(liste[0])
 
-    def ayikla(self,okunan_liste):
+    def ayikla(self,okunan_liste,okunan):
         isim = None
         komut = None
         simge = None
         kategoriler = None
         dongu = False
-        tum_isimler = []
+        tum_isimler = [okunan.split(".")[0]]
         for satir in okunan_liste:
             if satir[0:15] == "[Desktop Entry]":
                 dongu = True
@@ -71,6 +71,7 @@ class Ara(object):
                 elif satir[0:11] == "Categories=":
                     kategoriler = satir[11:-1]
                 elif satir[0:9] == "Name[{}]=".format(self.ebeveyn.ebeveyn.sistem_dili):
+                    isim = satir[9:-1]
                     tum_isimler.append(satir[9:-1])
                 elif satir[0:8] == "Comment=":
                     tum_isimler.append(satir[8:-1])

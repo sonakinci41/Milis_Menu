@@ -9,8 +9,9 @@ class MerkezPencere(QWidget):
     def __init__(self, ebeveyn=None):
         super(MerkezPencere, self).__init__(ebeveyn)
         self.pencere_boyut = (500,350)
-        self.pencere_konum = (250,250)
+        self.pencere_konum = (0,350)
         self.setGeometry(0,0,self.pencere_boyut[0],self.pencere_boyut[1])
+        self.move(self.pencere_konum[0],self.pencere_konum[1])
 
         self.sistem_dili = "tr"
         self.aranacak_dizin = os.path.expanduser("~")
