@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import (QWidget,QGridLayout,QComboBox,QListWidget,QListWidgetItem,QPushButton)
 from PyQt5.QtGui import QIcon
-import uygulama_ara, os
+from milis_menu_lib import uygulama_ara
+import os
 
 class Uyg_Stacked(QWidget):
     def __init__(self, ebeveyn=None):
@@ -14,7 +15,7 @@ class Uyg_Stacked(QWidget):
         tum_uyg_pb = QPushButton()
         tum_uyg_pb.setFixedHeight(24)
         tum_uyg_pb.setText("Tüm Uygulamalar")
-        tum_uyg_pb.setIcon(QIcon("simgeler/uygulama.svg"))
+        tum_uyg_pb.setIcon(QIcon(self.ebeveyn.icon_yolu+"uygulama.svg"))
         tum_uyg_pb.clicked.connect(self.tum_uyg_basildi)
         tum_uyg_pb.setStyleSheet("Text-align:left;border:none;")
         uygulama_ara_kutu.addWidget(tum_uyg_pb,0,0,1,1)
@@ -22,7 +23,7 @@ class Uyg_Stacked(QWidget):
         ayar_uyg_pb = QPushButton()
         ayar_uyg_pb.setFixedHeight(24)
         ayar_uyg_pb.setText("Ayarlar")
-        ayar_uyg_pb.setIcon(QIcon("simgeler/uyg_ayarlar.svg"))
+        ayar_uyg_pb.setIcon(QIcon(self.ebeveyn.icon_yolu+"uyg_ayarlar.svg"))
         ayar_uyg_pb.clicked.connect(self.ayar_uyg_basildi)
         ayar_uyg_pb.setStyleSheet("Text-align:left;border:none;")
         uygulama_ara_kutu.addWidget(ayar_uyg_pb,1,0,1,1)
@@ -30,7 +31,7 @@ class Uyg_Stacked(QWidget):
         cok_ort_uyg_pb = QPushButton()
         cok_ort_uyg_pb.setFixedHeight(24)
         cok_ort_uyg_pb.setText("Çoklu Ortam")
-        cok_ort_uyg_pb.setIcon(QIcon("simgeler/uyg_cok_ort.svg"))
+        cok_ort_uyg_pb.setIcon(QIcon(self.ebeveyn.icon_yolu+"uyg_cok_ort.svg"))
         cok_ort_uyg_pb.clicked.connect(self.cok_ort_uyg_basildi)
         cok_ort_uyg_pb.setStyleSheet("Text-align:left;border:none;")
         uygulama_ara_kutu.addWidget(cok_ort_uyg_pb,2,0,1,1)
@@ -38,7 +39,7 @@ class Uyg_Stacked(QWidget):
         egitim_uyg_pb = QPushButton()
         egitim_uyg_pb.setFixedHeight(24)
         egitim_uyg_pb.setText("Eğitim")
-        egitim_uyg_pb.setIcon(QIcon("simgeler/uyg_egitim.svg"))
+        egitim_uyg_pb.setIcon(QIcon(self.ebeveyn.icon_yolu+"uyg_egitim.svg"))
         egitim_uyg_pb.clicked.connect(self.egitim_uyg_basildi)
         egitim_uyg_pb.setStyleSheet("Text-align:left;border:none;")
         uygulama_ara_kutu.addWidget(egitim_uyg_pb,3,0,1,1)
@@ -46,7 +47,7 @@ class Uyg_Stacked(QWidget):
         gelistirme_uyg_pb = QPushButton()
         gelistirme_uyg_pb.setFixedHeight(24)
         gelistirme_uyg_pb.setText("Geliştirme")
-        gelistirme_uyg_pb.setIcon(QIcon("simgeler/uyg_gelistirme.svg"))
+        gelistirme_uyg_pb.setIcon(QIcon(self.ebeveyn.icon_yolu+"uyg_gelistirme.svg"))
         gelistirme_uyg_pb.clicked.connect(self.gelistirme_uyg_basildi)
         gelistirme_uyg_pb.setStyleSheet("Text-align:left;border:none;")
         uygulama_ara_kutu.addWidget(gelistirme_uyg_pb,4,0,1,1)
@@ -54,7 +55,7 @@ class Uyg_Stacked(QWidget):
         grafik_uyg_pb = QPushButton()
         grafik_uyg_pb.setFixedHeight(24)
         grafik_uyg_pb.setText("Grafik")
-        grafik_uyg_pb.setIcon(QIcon("simgeler/uyg_grafik.svg"))
+        grafik_uyg_pb.setIcon(QIcon(self.ebeveyn.icon_yolu+"uyg_grafik.svg"))
         grafik_uyg_pb.clicked.connect(self.grafik_uyg_basildi)
         grafik_uyg_pb.setStyleSheet("Text-align:left;border:none;")
         uygulama_ara_kutu.addWidget(grafik_uyg_pb,5,0,1,1)
@@ -62,7 +63,7 @@ class Uyg_Stacked(QWidget):
         internet_uyg_pb = QPushButton()
         internet_uyg_pb.setFixedHeight(24)
         internet_uyg_pb.setText("İnternet")
-        internet_uyg_pb.setIcon(QIcon("simgeler/uyg_internet.svg"))
+        internet_uyg_pb.setIcon(QIcon(self.ebeveyn.icon_yolu+"uyg_internet.svg"))
         internet_uyg_pb.clicked.connect(self.internet_uyg_basildi)
         internet_uyg_pb.setStyleSheet("Text-align:left;border:none;")
         uygulama_ara_kutu.addWidget(internet_uyg_pb,6,0,1,1)
@@ -70,7 +71,7 @@ class Uyg_Stacked(QWidget):
         ofis_uyg_pb = QPushButton()
         ofis_uyg_pb.setFixedHeight(24)
         ofis_uyg_pb.setText("Ofis")
-        ofis_uyg_pb.setIcon(QIcon("simgeler/uyg_ofis.svg"))
+        ofis_uyg_pb.setIcon(QIcon(self.ebeveyn.icon_yolu+"uyg_ofis.svg"))
         ofis_uyg_pb.clicked.connect(self.ofis_uyg_basildi)
         ofis_uyg_pb.setStyleSheet("Text-align:left;border:none;")
         uygulama_ara_kutu.addWidget(ofis_uyg_pb,7,0,1,1)
@@ -78,7 +79,7 @@ class Uyg_Stacked(QWidget):
         sistem_uyg_pb = QPushButton()
         sistem_uyg_pb.setFixedHeight(24)
         sistem_uyg_pb.setText("Sistem")
-        sistem_uyg_pb.setIcon(QIcon("simgeler/uyg_sistem.svg"))
+        sistem_uyg_pb.setIcon(QIcon(self.ebeveyn.icon_yolu+"uyg_sistem.svg"))
         sistem_uyg_pb.clicked.connect(self.sistem_uyg_basildi)
         sistem_uyg_pb.setStyleSheet("Text-align:left;border:none;")
         uygulama_ara_kutu.addWidget(sistem_uyg_pb,8,0,1,1)
@@ -86,7 +87,7 @@ class Uyg_Stacked(QWidget):
         diger_uyg_pb = QPushButton()
         diger_uyg_pb.setFixedHeight(24)
         diger_uyg_pb.setText("Diğer")
-        diger_uyg_pb.setIcon(QIcon("simgeler/uyg_diger.svg"))
+        diger_uyg_pb.setIcon(QIcon(self.ebeveyn.icon_yolu+"uyg_diger.svg"))
         diger_uyg_pb.clicked.connect(self.diger_uyg_basildi)
         diger_uyg_pb.setStyleSheet("Text-align:left;border:none;")
         uygulama_ara_kutu.addWidget(diger_uyg_pb,9,0,1,1)
@@ -236,7 +237,7 @@ class Uyg_Stacked(QWidget):
                     if ikinci != None:
                        break
                 if ikinci == None:
-                    ikinci = QIcon("./simgeler/bilinmeyen.svg")
+                    ikinci = QIcon(self.ebeveyn.icon_yolu+"bilinmeyen.svg")
                 liste_maddesi = QListWidgetItem(QIcon.fromTheme(uygulama[2], ikinci), uygulama[0])
                 self.uygulama_ara_lw.addItem(liste_maddesi)
             self.uygulama_ara_lw.setCurrentRow(0)

@@ -1,9 +1,46 @@
+#!/usr/bin/env python3
 import sys,os, getpass
-import uyg_stacked, int_stacked, dosya_stacked
-from PyQt5.QtWidgets import (QWidget,QApplication,QLineEdit,QHBoxLayout,QPushButton,QStackedWidget,QSpacerItem,
-                             QSizePolicy, QVBoxLayout, QMenu, QAction)
+from milis_menu_lib import uyg_stacked, int_stacked, dosya_stacked
+from PyQt5.QtWidgets import (QWidget,QApplication,QLineEdit,QHBoxLayout,QPushButton,QStackedWidget,
+                             QVBoxLayout, QMenu, QAction)
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QSize, Qt, QProcess
+from PyQt5.QtCore import QSize, Qt, QProcess, QObject, pyqtSignal
+from PyQt5.QtNetwork import QLocalServer, QLocalSocket
+
+class SingleApplication(QObject):
+    newInstance = pyqtSignal()
+    urlPost = pyqtSignal(bytearray)
+
+    def __init__(self):
+        super().__init__()
+        self.mServer = QLocalServer()
+        self.mServer.newConnection.connect(self.newConnection)
+
+    def listen(self, client):
+        self.mServer.removeServer(client)
+        self.mServer.listen(client)
+
+    def hasPrevious(self, name, args):
+        socket = QLocalSocket()
+        socket.connectToServer(name, QLocalSocket.ReadWrite)
+        if socket.waitForConnected():
+            if len(args) > 1:
+                socket.write(bytearray(args[1], encoding="utf-8"))
+            else:
+                pass
+            socket.flush()
+            return True
+        return False
+
+    def newConnection(self):
+        self.newInstance.emit()
+        self.mSocket = self.mServer.nextPendingConnection()
+        self.mSocket.readyRead.connect(self.readyRead)
+
+    def readyRead(self):
+        self.urlPost.emit(bytearray(self.mSocket.readAll()))
+        self.mSocket.close()
+
 
 class MerkezPencere(QWidget):
     def __init__(self, ebeveyn=None):
@@ -17,6 +54,13 @@ class MerkezPencere(QWidget):
         self.sistem_dili = "tr"
         self.aranacak_dizin = os.path.expanduser("~")
 
+        #iconların adresi
+        if os.path.exists("/usr/share/milis_menu/simgeler/"):
+            self.icon_yolu = "/usr/share/milis_menu/simgeler/"
+        else:
+            self.icon_yolu = "simgeler/"
+
+
         kutu = QVBoxLayout()
         kutu.setContentsMargins(0,0,0,0)
         self.setLayout(kutu)
@@ -28,21 +72,21 @@ class MerkezPencere(QWidget):
         self.uygulamalar_pb = QPushButton()
         self.uygulamalar_pb.setCheckable(True)
         self.uygulamalar_pb.setChecked(True)
-        self.uygulamalar_pb.setIcon(QIcon("simgeler/uygulama.svg"))
+        self.uygulamalar_pb.setIcon(QIcon(self.icon_yolu+"uygulama.svg"))
         self.uygulamalar_pb.setFixedSize(QSize(36,36))
         self.uygulamalar_pb.setIconSize(QSize(32,32))
         ilk_yatay_kutu.addWidget(self.uygulamalar_pb)
 
         self.dosyalar_pb = QPushButton()
         self.dosyalar_pb.setCheckable(True)
-        self.dosyalar_pb.setIcon(QIcon("simgeler/dosya.svg"))
+        self.dosyalar_pb.setIcon(QIcon(self.icon_yolu+"dosya.svg"))
         self.dosyalar_pb.setFixedSize(QSize(36,36))
         self.dosyalar_pb.setIconSize(QSize(32,32))
         ilk_yatay_kutu.addWidget(self.dosyalar_pb)
 
         self.internet_pb = QPushButton()
         self.internet_pb.setCheckable(True)
-        self.internet_pb.setIcon(QIcon("simgeler/internet.svg"))
+        self.internet_pb.setIcon(QIcon(self.icon_yolu+"internet.svg"))
         self.internet_pb.setFixedSize(QSize(36,36))
         self.internet_pb.setIconSize(QSize(32,32))
         ilk_yatay_kutu.addWidget(self.internet_pb)
@@ -53,19 +97,19 @@ class MerkezPencere(QWidget):
         ilk_yatay_kutu.addWidget(self.arama_le)
 
         kapa_yb_cikis_pb = QMenu()
-        kapa_yb_cikis_pb.addAction(QAction(QIcon("simgeler/cikis.svg"), "Çıkış", self, triggered=self.cikis_basildi))
-        kapa_yb_cikis_pb.addAction(QAction(QIcon("simgeler/yeniden_baslat.svg"), "Yeniden Başlat", self, triggered=self.yen_bas_basildi))
-        kapa_yb_cikis_pb.addAction(QAction(QIcon("simgeler/kapat.svg"), "Kapat", self, triggered=self.kapat_basildi))
+        kapa_yb_cikis_pb.addAction(QAction(QIcon(self.icon_yolu+"cikis.svg"), "Çıkış", self, triggered=self.cikis_basildi))
+        kapa_yb_cikis_pb.addAction(QAction(QIcon(self.icon_yolu+"yeniden_baslat.svg"), "Yeniden Başlat", self, triggered=self.yen_bas_basildi))
+        kapa_yb_cikis_pb.addAction(QAction(QIcon(self.icon_yolu+"kapat.svg"), "Kapat", self, triggered=self.kapat_basildi))
 
         self.ayarlar_pb = QPushButton()
-        self.ayarlar_pb.setIcon(QIcon("simgeler/bilinmeyen.svg"))
+        self.ayarlar_pb.setIcon(QIcon(self.icon_yolu+"bilinmeyen.svg"))
         self.ayarlar_pb.setFixedSize(QSize(36,36))
         self.ayarlar_pb.setIconSize(QSize(32,32))
         ilk_yatay_kutu.addWidget(self.ayarlar_pb)
 
         self.kapa_yb_cikis_pb = QPushButton()
         self.kapa_yb_cikis_pb.setMenu(kapa_yb_cikis_pb)
-        self.kapa_yb_cikis_pb.setIcon(QIcon("simgeler/kapat.svg"))
+        self.kapa_yb_cikis_pb.setIcon(QIcon(self.icon_yolu+"kapat.svg"))
         self.kapa_yb_cikis_pb.setFixedSize(QSize(54,36))
         self.kapa_yb_cikis_pb.setIconSize(QSize(32,32))
         ilk_yatay_kutu.addWidget(self.kapa_yb_cikis_pb)
@@ -89,6 +133,16 @@ class MerkezPencere(QWidget):
 
     def ayarlar_basildi(self):
         pass
+
+    def pencereyi_goster(self, arg=None):
+        gelen = arg.decode("utf-8")
+        if gelen == "uygulama":
+            self.uyg_pb_basildi()
+        elif gelen == "dosya":
+            self.dosyalar_pb_basildi()
+        elif gelen == "internet":
+            self.internet_pb_basildi()
+        self.show()
 
     def cikis_basildi(self):
         pro = QProcess()
@@ -173,6 +227,11 @@ if __name__ == "__main__":
     app_ = QApplication(sys.argv)
     app_.setOrganizationName('Milis Menu')
     app_.setApplicationName('milis_menu')
-    pencere = MerkezPencere()
-    pencere.show()
-    sys.exit(app_.exec_())
+    app_.setQuitOnLastWindowClosed(False)
+    single = SingleApplication()
+    if not single.hasPrevious('milis_menu', app_.arguments()):
+        single.listen('milis_menu')
+        pencere = MerkezPencere()
+        single.urlPost.connect(pencere.pencereyi_goster)
+        pencere.show()
+        sys.exit(app_.exec_())
