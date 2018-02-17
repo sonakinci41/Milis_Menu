@@ -1,21 +1,26 @@
 #!/usr/bin/env python3
 import sys,os, getpass
-from milis_menu_lib import uyg_stacked, int_stacked, dosya_stacked
+from milis_menu_lib import uyg_stacked, int_stacked, dosya_stacked, ayarlar_stacked
 from PyQt5.QtWidgets import (QWidget,QApplication,QLineEdit,QHBoxLayout,QPushButton,QStackedWidget,
                              QVBoxLayout, QMenu, QAction, qApp)
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QSize, Qt, QProcess
+from PyQt5.QtCore import QSize, Qt, QProcess, QSettings
 
 class MerkezPencere(QWidget):
     def __init__(self, ebeveyn=None):
         super(MerkezPencere, self).__init__(ebeveyn)
-        self.pencere_boyut = (500,350)
-        self.pencere_konum = (0,350)
+        #Menu Ayarları
+        self.ayarlar = QSettings()
+        self.pencere_boyut = self.ayarlar.value("pencere_boyutu",type=tuple) or (500,350)
+        self.pencere_konum = self.ayarlar.value("pencere_konum",type=tuple) or (0,350)
+        self.sistem_dili = self.ayarlar.value("sistem_dili",type=str) or "tr"
+        self.konsol_vars = self.ayarlar.value("konsol_vars",type=str) or "xterm"
+        self.tarayici_vars = self.ayarlar.value("tarayici_vars",type=str) or "firefox"
+
         self.setGeometry(0,0,self.pencere_boyut[0],self.pencere_boyut[1])
         self.move(self.pencere_konum[0],self.pencere_konum[1])
         self.setWindowFlags(Qt.Popup)
 
-        self.sistem_dili = "tr"
         self.aranacak_dizin = os.path.expanduser("~")
 
         #iconların adresi
@@ -88,6 +93,8 @@ class MerkezPencere(QWidget):
         self.arama_sk.addWidget(self.dosya_bolumu)
         self.internet_bolumu = int_stacked.Int_Stacked(self)
         self.arama_sk.addWidget(self.internet_bolumu)
+        self.ayarlar_bolumu = ayarlar_stacked.Ayarlar_Stacked(self)
+        self.arama_sk.addWidget(self.ayarlar_bolumu)
 
         #Sinyaller
         self.uygulamalar_pb.clicked.connect(self.uyg_pb_basildi)
@@ -101,7 +108,9 @@ class MerkezPencere(QWidget):
         qApp.exit()
 
     def ayarlar_basildi(self):
-        pass
+        self.aktif_bolum = "ayarlar"
+        self.arama_sk.setCurrentIndex(3)
+        self.arama_le.setDisabled(True)
 
     def cikis_basildi(self):
         pro = QProcess()
@@ -119,6 +128,7 @@ class MerkezPencere(QWidget):
         qApp.exit()
 
     def button_ayarla(self,secilen):
+        self.arama_le.setDisabled(False)
         if secilen == 1:
             self.uygulamalar_pb.setChecked(True)
             self.dosyalar_pb.setChecked(False)
@@ -164,7 +174,12 @@ class MerkezPencere(QWidget):
 
     def keyPressEvent(self, olay):
         if olay.key() == Qt.Key_Return:
-            if self.aktif_bolum == "uygulama":
+            yazilan = self.arama_le.text()
+            if len(yazilan) > 5 and yazilan[:3] == "sh ":
+                pro = QProcess()
+                pro.startDetached(self.konsol_vars, yazilan[3:].split())
+                qApp.exit()
+            elif self.aktif_bolum == "uygulama":
                 self.uygulama_bolumu.enter_basildi()
             elif self.aktif_bolum == "dosya":
                 self.dosya_bolumu.enter_basildi()

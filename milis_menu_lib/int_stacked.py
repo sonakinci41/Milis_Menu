@@ -44,7 +44,7 @@ class Int_Stacked(QWidget):
         if secili_item != None:
             secili = secili_item.text()
             pro = QProcess()
-            pro.startDetached("firefox",[self.listedikler[secili]])
+            pro.startDetached(self.ebeveyn.tarayici_vars,[self.listedikler[secili]])
             qApp.exit()
 
     def yukari_basildi(self):

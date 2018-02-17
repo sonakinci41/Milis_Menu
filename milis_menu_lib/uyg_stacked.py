@@ -105,6 +105,7 @@ class Uyg_Stacked(QWidget):
         uygulamalar = list(self.uygulamalar.keys())
         uygulamalar.sort()
         self.listeye_ekle(uygulamalar)
+        self.uygulama_ara_lw.setFocus(True)
 
     def ayar_uyg_basildi(self):
         self.uygulama_ara_lw.clear()
@@ -113,6 +114,7 @@ class Uyg_Stacked(QWidget):
             uygulamalar = list(kontrol)
             uygulamalar.sort()
             self.listeye_ekle(uygulamalar)
+            self.uygulama_ara_lw.setFocus(True)
 
     def cok_ort_uyg_basildi(self):
         self.uygulama_ara_lw.clear()
@@ -121,6 +123,7 @@ class Uyg_Stacked(QWidget):
             uygulamalar = list(kontrol)
             uygulamalar.sort()
             self.listeye_ekle(uygulamalar)
+            self.uygulama_ara_lw.setFocus(True)
 
     def egitim_uyg_basildi(self):
         self.uygulama_ara_lw.clear()
@@ -128,6 +131,7 @@ class Uyg_Stacked(QWidget):
         if kontrol != "Yok":
             uygulamalar = list(kontrol)
             self.listeye_ekle(uygulamalar)
+            self.uygulama_ara_lw.setFocus(True)
 
     def gelistirme_uyg_basildi(self):
         self.uygulama_ara_lw.clear()
@@ -135,6 +139,7 @@ class Uyg_Stacked(QWidget):
         if kontrol != "Yok":
             uygulamalar = list(kontrol)
             self.listeye_ekle(uygulamalar)
+            self.uygulama_ara_lw.setFocus(True)
 
     def grafik_uyg_basildi(self):
         self.uygulama_ara_lw.clear()
@@ -142,6 +147,7 @@ class Uyg_Stacked(QWidget):
         if kontrol != "Yok":
             uygulamalar = list(kontrol)
             self.listeye_ekle(uygulamalar)
+            self.uygulama_ara_lw.setFocus(True)
 
     def internet_uyg_basildi(self):
         self.uygulama_ara_lw.clear()
@@ -149,6 +155,7 @@ class Uyg_Stacked(QWidget):
         if kontrol != "Yok":
             uygulamalar = list(kontrol)
             self.listeye_ekle(uygulamalar)
+            self.uygulama_ara_lw.setFocus(True)
 
     def ofis_uyg_basildi(self):
         self.uygulama_ara_lw.clear()
@@ -156,6 +163,7 @@ class Uyg_Stacked(QWidget):
         if kontrol != "Yok":
             uygulamalar = list(kontrol)
             self.listeye_ekle(uygulamalar)
+            self.uygulama_ara_lw.setFocus(True)
 
     def sistem_uyg_basildi(self):
         self.uygulama_ara_lw.clear()
@@ -163,6 +171,7 @@ class Uyg_Stacked(QWidget):
         if kontrol != "Yok":
             uygulamalar = list(kontrol)
             self.listeye_ekle(uygulamalar)
+            self.uygulama_ara_lw.setFocus(True)
 
     def diger_uyg_basildi(self):
         self.uygulama_ara_lw.clear()
@@ -170,6 +179,7 @@ class Uyg_Stacked(QWidget):
         if kontrol != "Yok":
             uygulamalar = list(kontrol)
             self.listeye_ekle(uygulamalar)
+            self.uygulama_ara_lw.setFocus(True)
 
     def uygulama_ara(self,kelime):
         """Aranmak istenen uygulamayı arayıp geri dönüt vereceğiz"""
