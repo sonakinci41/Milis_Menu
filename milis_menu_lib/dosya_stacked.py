@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import (QWidget,QGridLayout,QComboBox,QListWidget,QListWidgetItem,qApp)
+from PyQt5.QtWidgets import (QWidget,QGridLayout,QListWidget,QListWidgetItem,qApp)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QTimer,QThread,pyqtSignal, QMimeDatabase, QProcess
 import contextlib,subprocess
@@ -52,6 +52,7 @@ class Dosya_Stacked(QWidget):
             secili = secili_item.text()
             pro = QProcess()
             pro.startDetached("xdg-open",[secili])
+            qApp.exit()
 
     def yukari_basildi(self):
         secili_sira = self.dosya_sonuc_lw.currentRow()

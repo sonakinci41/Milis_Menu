@@ -1,5 +1,5 @@
 import requests
-from PyQt5.QtWidgets import (QWidget,QGridLayout,QComboBox,QListWidget,QListWidgetItem)
+from PyQt5.QtWidgets import (QWidget,QGridLayout,QListWidget,qApp)
 from PyQt5.QtCore import QThread, pyqtSignal, QTimer, QProcess
 
 class Int_Stacked(QWidget):
@@ -45,6 +45,7 @@ class Int_Stacked(QWidget):
             secili = secili_item.text()
             pro = QProcess()
             pro.startDetached("firefox",[self.listedikler[secili]])
+            qApp.exit()
 
     def yukari_basildi(self):
         secili_sira = self.internet_sonuc_lw.currentRow()
