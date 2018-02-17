@@ -16,6 +16,7 @@ class MerkezPencere(QWidget):
         self.sistem_dili = self.ayarlar.value("sistem_dili",type=str) or "tr"
         self.konsol_vars = self.ayarlar.value("konsol_vars",type=str) or "xterm"
         self.tarayici_vars = self.ayarlar.value("tarayici_vars",type=str) or "firefox"
+        self.icon_boyutu = self.ayarlar.value("icon_boyutu",type=int) or 32
 
         self.setGeometry(0,0,self.pencere_boyut[0],self.pencere_boyut[1])
         self.move(self.pencere_konum[0],self.pencere_konum[1])

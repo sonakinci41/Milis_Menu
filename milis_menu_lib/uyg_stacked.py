@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import (QWidget,QGridLayout,QListWidget,QListWidgetItem,QPushButton,qApp)
 from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import QSize
 from milis_menu_lib import uygulama_ara
 import os
 
@@ -94,6 +95,7 @@ class Uyg_Stacked(QWidget):
 
 
         self.uygulama_ara_lw = QListWidget()
+        self.uygulama_ara_lw.setIconSize(QSize(self.ebeveyn.icon_boyutu,self.ebeveyn.icon_boyutu))
         self.uygulama_ara_lw.itemDoubleClicked.connect(self.enter_basildi)
         uygulama_ara_kutu.addWidget(self.uygulama_ara_lw,0,1,10,1)
 

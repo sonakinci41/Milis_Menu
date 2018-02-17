@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (QWidget,QGridLayout,QListWidget,QListWidgetItem,qApp)
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QTimer,QThread,pyqtSignal, QMimeDatabase, QProcess
+from PyQt5.QtCore import QTimer,QThread,pyqtSignal, QMimeDatabase, QProcess, QSize
 import contextlib,subprocess
 
 class Dosya_Stacked(QWidget):
@@ -12,6 +12,7 @@ class Dosya_Stacked(QWidget):
         self.setLayout(kutu)
 
         self.dosya_sonuc_lw = QListWidget()
+        self.dosya_sonuc_lw.setIconSize(QSize(self.ebeveyn.icon_boyutu,self.ebeveyn.icon_boyutu))
         self.dosya_sonuc_lw.itemDoubleClicked.connect(self.enter_basildi)
         kutu.addWidget(self.dosya_sonuc_lw,0,0,1,1)
 

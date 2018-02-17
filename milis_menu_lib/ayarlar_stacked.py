@@ -37,10 +37,15 @@ class Ayarlar_Stacked(QWidget):
         self.tarayici_vars_le = QLineEdit()
         kutu.addWidget(self.tarayici_vars_le,3,1,1,3)
 
+        icon_b_vars_lab = QLabel("İcon Boyutu")
+        kutu.addWidget(icon_b_vars_lab,4,0,1,1)
+        self.icon_b_vars_le = QLineEdit()
+        kutu.addWidget(self.icon_b_vars_le,4,1,1,3)
+
         uygula_dugme = QPushButton()
         uygula_dugme.setText("Uygula")
         uygula_dugme.clicked.connect(self.uygula_fonk)
-        kutu.addWidget(uygula_dugme,4,0,1,4)
+        kutu.addWidget(uygula_dugme,5,0,1,4)
 
     def showEvent(self, event):
         self.boyut_genislik_le.setText(str(self.ebeveyn.pencere_boyut[0]))
@@ -49,6 +54,7 @@ class Ayarlar_Stacked(QWidget):
         self.konum_y_le.setText(str(self.ebeveyn.pencere_konum[1]))
         self.konsol_vars_le.setText(self.ebeveyn.konsol_vars)
         self.tarayici_vars_le.setText(self.ebeveyn.tarayici_vars)
+        self.icon_b_vars_le.setText(str(self.ebeveyn.icon_boyutu))
 
     def uygula_fonk(self):
         self.ebeveyn.pencere_boyut = (int(self.boyut_genislik_le.text()),int(self.boyut_yukseklik_le.text()))
@@ -59,3 +65,5 @@ class Ayarlar_Stacked(QWidget):
         self.ebeveyn.ayarlar.setValue("konsol_vars", self.ebeveyn.konsol_vars)
         self.ebeveyn.tarayici_vars = self.tarayici_vars_le.text()
         self.ebeveyn.ayarlar.setValue("tarayici_vars", self.ebeveyn.tarayici_vars)
+        self.ebeveyn.icon_boyutu = int(self.icon_b_vars_le.text())
+        self.ebeveyn.ayarlar.setValue("icon_boyutu",self.ebeveyn.icon_boyutu)

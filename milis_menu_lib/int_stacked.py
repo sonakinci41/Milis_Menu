@@ -1,6 +1,7 @@
 import requests
-from PyQt5.QtWidgets import (QWidget,QGridLayout,QListWidget,qApp)
-from PyQt5.QtCore import QThread, pyqtSignal, QTimer, QProcess
+from PyQt5.QtWidgets import (QWidget,QGridLayout,QListWidget,qApp,QListWidgetItem)
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import QThread, pyqtSignal, QTimer, QProcess, QSize
 
 class Int_Stacked(QWidget):
     def __init__(self, ebeveyn=None):
@@ -11,6 +12,7 @@ class Int_Stacked(QWidget):
         self.setLayout(kutu)
 
         self.internet_sonuc_lw = QListWidget()
+        self.internet_sonuc_lw.setIconSize(QSize(self.ebeveyn.icon_boyutu,self.ebeveyn.icon_boyutu))
         self.internet_sonuc_lw.itemDoubleClicked.connect(self.enter_basildi)
         kutu.addWidget(self.internet_sonuc_lw,0,0,1,1)
 
@@ -35,7 +37,8 @@ class Int_Stacked(QWidget):
             self.liste_uyg_say = 0
             for i in sozluk.keys():
                 if sozluk[i][:3] != "?q=":
-                    self.internet_sonuc_lw.addItem(i)
+                    lm = QListWidgetItem(QIcon.fromTheme(self.ebeveyn.tarayici_vars),i)
+                    self.internet_sonuc_lw.addItem(lm)
                     self.liste_uyg_say += 1
             self.internet_sonuc_lw.setCurrentRow(0)
 
