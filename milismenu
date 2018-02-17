@@ -178,7 +178,8 @@ class MerkezPencere(QWidget):
             yazilan = self.arama_le.text()
             if len(yazilan) > 3 and yazilan[:2] == "> ":
                 pro = QProcess()
-                pro.startDetached(self.konsol_vars, yazilan[2:].split())
+                komut = ["-hold","-e"] + yazilan[2:].split()
+                pro.startDetached(self.konsol_vars, komut)
                 qApp.exit()
             elif self.aktif_bolum == "uygulama":
                 self.uygulama_bolumu.enter_basildi()
