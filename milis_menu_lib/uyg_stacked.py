@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import (QWidget,QGridLayout,QListWidget,QListWidgetItem,QPushButton,qApp)
+from PyQt5.QtWidgets import (QWidget,QGridLayout,QListWidget,QListWidgetItem,QPushButton,qApp, QMenu, QAction)
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QSize
+from PyQt5.QtCore import QSize, Qt, QSignalMapper, QPoint, QProcess
 from milis_menu_lib import uygulama_ara
 import os
 
@@ -95,12 +95,42 @@ class Uyg_Stacked(QWidget):
 
 
         self.uygulama_ara_lw = QListWidget()
+        self.uygulama_ara_lw.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.uygulama_ara_lw.customContextMenuRequested.connect(self.cmYukleyici)
         self.uygulama_ara_lw.setIconSize(QSize(self.ebeveyn.icon_boyutu,self.ebeveyn.icon_boyutu))
         self.uygulama_ara_lw.itemDoubleClicked.connect(self.enter_basildi)
         uygulama_ara_kutu.addWidget(self.uygulama_ara_lw,0,1,10,1)
 
         #Sinyaller
         self.tum_uyg_basildi()
+
+    def cmYukleyici(self,pos):
+        item = self.uygulama_ara_lw.itemAt(pos)
+        menu = QMenu("Context Menu",self)
+        mapper = QSignalMapper(self)
+        if item is not None:
+            for i in self.ebeveyn.uyg_sagtik_gerekler.keys():
+                aksiyon = QAction(i,self, statusTip=i, triggered=mapper.map,checkable=False)
+                mapper.setMapping(aksiyon, i)
+                menu.addAction(aksiyon)
+            mapper.mapped['QString'].connect(self.sagtik_calistir)
+            menu.exec_(self.uygulama_ara_lw.mapToGlobal(QPoint(pos.x()-150,pos.y()-50)))
+
+    def sagtik_calistir(self,ad):
+        veri = self.uygulamalar[self.uygulama_ara_lw.currentItem().text()]
+        calistir = veri[1].split(" %")[0]
+        desktop = veri[-1][0]+".desktop"
+        komut = self.ebeveyn.uyg_sagtik_gerekler[ad]
+        komut = komut.replace("#exec",calistir)
+        komut = komut.replace("#desktop",desktop)
+        pro = QProcess()
+        komut = komut.split()
+        if len(komut) == 1:
+            pro.startDetached(komut[0])
+            qApp.exit()
+        else:
+            pro.startDetached(komut[0],komut[1:])
+            qApp.exit()
 
     def tum_uyg_basildi(self):
         self.uygulama_ara_lw.clear()
@@ -202,7 +232,8 @@ class Uyg_Stacked(QWidget):
     def uygulama_baslat(self,isim):
         """uygulamayı exec teki komutu kullanarak subprocess popen ile çalıştırıyorız"""
         komut = self.uygulamalar[isim][1].split(" %")[0]
-        os.system(komut+"&")
+        pro = QProcess()
+        pro.startDetached(komut)
 #        subprocess.Popen(komut)
 
     def yukari_basildi(self):
