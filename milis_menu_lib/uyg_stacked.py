@@ -127,10 +127,8 @@ class Uyg_Stacked(QWidget):
         komut = komut.split()
         if len(komut) == 1:
             pro.startDetached(komut[0])
-            qApp.exit()
         else:
             pro.startDetached(komut[0],komut[1:])
-            qApp.exit()
 
     def tum_uyg_basildi(self):
         self.uygulama_ara_lw.clear()
