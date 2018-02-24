@@ -1,5 +1,5 @@
 import requests
-from PyQt5.QtWidgets import (QWidget,QGridLayout,QListWidget,qApp,QListWidgetItem)
+from PyQt5.QtWidgets import (QWidget,QGridLayout,QListWidget,QListWidgetItem)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QThread, pyqtSignal, QTimer, QProcess, QSize
 
@@ -48,7 +48,7 @@ class Int_Stacked(QWidget):
             secili = secili_item.text()
             pro = QProcess()
             pro.startDetached(self.ebeveyn.tarayici_vars,[self.listedikler[secili]])
-            qApp.exit()
+            self.ebeveyn.hide()
 
     def yukari_basildi(self):
         secili_sira = self.internet_sonuc_lw.currentRow()

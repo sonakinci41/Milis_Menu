@@ -1,72 +1,109 @@
-from PyQt5.QtWidgets import (QWidget,QGridLayout,QLabel,QPushButton,QLineEdit, QTreeWidget, QTreeWidgetItem, QDialog)
+from PyQt5.QtWidgets import (QWidget,QGridLayout,QLabel,QPushButton,QLineEdit, QTreeWidget, QTreeWidgetItem, QDialog,
+                             QScrollArea)
 from PyQt5.QtCore import Qt
 
 class Ayarlar_Stacked(QWidget):
     def __init__(self, ebeveyn=None):
         super(Ayarlar_Stacked, self).__init__(ebeveyn)
         self.ebeveyn = ebeveyn
-        kutu = QGridLayout()
-        self.setLayout(kutu)
-        self.setContentsMargins(0,0,0,0)
-        boyut_genislik_lab = QLabel("Menu Genişliği")
-        kutu.addWidget(boyut_genislik_lab,0,0,1,1)
-        self.boyut_genislik_le = QLineEdit()
-        kutu.addWidget(self.boyut_genislik_le,0,1,1,1)
 
-        boyut_yukseklik_lab = QLabel("Menu Yüksekliği")
-        kutu.addWidget(boyut_yukseklik_lab,0,2,1,1)
+        kutu = QGridLayout()
+        kutu.setContentsMargins(0,0,0,0)
+        widget_ = QWidget()
+        widget_.setLayout(kutu)
+
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setWidget(widget_)
+
+        kutu_1 = QGridLayout()
+        kutu_1.setContentsMargins(0,0,0,0)
+        kutu_1.addWidget(scroll,0,0,1,1)
+        self.setLayout(kutu_1)
+
+        baslat_genislik_lab = QLabel("Baş. Genişlik")
+        kutu.addWidget(baslat_genislik_lab,0,0,1,1)
+        self.baslat_genislik_le = QLineEdit()
+        kutu.addWidget(self.baslat_genislik_le,0,1,1,1)
+
+        baslat_yukseklik_lab = QLabel("Baş. Yükseklik")
+        kutu.addWidget(baslat_yukseklik_lab,0,2,1,1)
+        self.baslat_yukseklik_le = QLineEdit()
+        kutu.addWidget(self.baslat_yukseklik_le,0,3,1,1)
+
+        baslat_x_lab = QLabel("Baş. Konum X")
+        kutu.addWidget(baslat_x_lab,1,0,1,1)
+        self.baslat_x_le = QLineEdit()
+        kutu.addWidget(self.baslat_x_le,1,1,1,1)
+
+        baslat_y_lab = QLabel("Baş. Konum Y")
+        kutu.addWidget(baslat_y_lab,1,2,1,1)
+        self.baslat_y_le = QLineEdit()
+        kutu.addWidget(self.baslat_y_le,1,3,1,1)
+
+        boyut_genislik_lab = QLabel("Menu Genişlik")
+        kutu.addWidget(boyut_genislik_lab,2,0,1,1)
+        self.boyut_genislik_le = QLineEdit()
+        kutu.addWidget(self.boyut_genislik_le,2,1,1,1)
+
+        boyut_yukseklik_lab = QLabel("Menu Yükseklik")
+        kutu.addWidget(boyut_yukseklik_lab,2,2,1,1)
         self.boyut_yukseklik_le = QLineEdit()
-        kutu.addWidget(self.boyut_yukseklik_le,0,3,1,1)
+        kutu.addWidget(self.boyut_yukseklik_le,2,3,1,1)
 
         konum_x_lab = QLabel("Menu Konum X")
-        kutu.addWidget(konum_x_lab,1,0,1,1)
+        kutu.addWidget(konum_x_lab,3,0,1,1)
         self.konum_x_le = QLineEdit()
-        kutu.addWidget(self.konum_x_le,1,1,1,1)
+        kutu.addWidget(self.konum_x_le,3,1,1,1)
 
         konum_y_lab = QLabel("Menu Konum Y")
-        kutu.addWidget(konum_y_lab,1,2,1,1)
+        kutu.addWidget(konum_y_lab,3,2,1,1)
         self.konum_y_le = QLineEdit()
-        kutu.addWidget(self.konum_y_le,1,3,1,1)
+        kutu.addWidget(self.konum_y_le,3,3,1,1)
 
         konsol_vars_lab = QLabel("Terminal")
-        kutu.addWidget(konsol_vars_lab,2,0,1,1)
+        kutu.addWidget(konsol_vars_lab,4,0,1,1)
         self.konsol_vars_le = QLineEdit()
-        kutu.addWidget(self.konsol_vars_le,2,1,1,1)
+        kutu.addWidget(self.konsol_vars_le,4,1,1,1)
 
         tarayici_vars_lab = QLabel("Tarayıcı")
-        kutu.addWidget(tarayici_vars_lab,2,2,1,1)
+        kutu.addWidget(tarayici_vars_lab,4,2,1,1)
         self.tarayici_vars_le = QLineEdit()
-        kutu.addWidget(self.tarayici_vars_le,2,3,1,1)
+        kutu.addWidget(self.tarayici_vars_le,4,3,1,1)
 
-        icon_b_vars_lab = QLabel("İcon Boyutu")
-        kutu.addWidget(icon_b_vars_lab,3,0,1,1)
+        icon_b_vars_lab = QLabel("İcon Boyut")
+        kutu.addWidget(icon_b_vars_lab,5,0,1,1)
         self.icon_b_vars_le = QLineEdit()
-        kutu.addWidget(self.icon_b_vars_le,3,1,1,3)
+        kutu.addWidget(self.icon_b_vars_le,5,1,1,3)
 
         sagtik_lab = QLabel("Sağtık Menü")
-        kutu.addWidget(sagtik_lab,4,0,1,1)
+        kutu.addWidget(sagtik_lab,6,0,1,1)
         self.sagtik_tw = QTreeWidget()
         self.sagtik_tw.setColumnCount(2)
         self.sagtik_tw.headerItem().setText(0, "Menü Adı")
         self.sagtik_tw.headerItem().setText(1, "Komut")
-        kutu.addWidget(self.sagtik_tw,4,1,3,3)
+        kutu.addWidget(self.sagtik_tw,6,1,3,3)
 
         ekle_dugme = QPushButton()
         ekle_dugme.setText("Ekle")
         ekle_dugme.clicked.connect(self.ekle_dumge_basildi)
-        kutu.addWidget(ekle_dugme,5,0,1,1)
+        kutu.addWidget(ekle_dugme,7,0,1,1)
 
         sil_dugme = QPushButton()
         sil_dugme.setText("Sil")
         sil_dugme.clicked.connect(self.sil_dugme_basildi)
-        kutu.addWidget(sil_dugme,6,0,1,1)
+        kutu.addWidget(sil_dugme,8,0,1,1)
 
         uygula_dugme = QPushButton()
         uygula_dugme.setText("Uygula")
         uygula_dugme.clicked.connect(self.uygula_fonk)
-        kutu.addWidget(uygula_dugme,7,0,1,4)
+        kutu.addWidget(uygula_dugme,9,0,1,4)
 
     def showEvent(self, event):
+        self.baslat_genislik_le.setText(str(self.ebeveyn.baslatici_boyut[0]))
+        self.baslat_yukseklik_le.setText(str(self.ebeveyn.baslatici_boyut[1]))
+        self.baslat_x_le.setText(str(self.ebeveyn.baslatici_konum[0]))
+        self.baslat_y_le.setText(str(self.ebeveyn.baslatici_konum[1]))
         self.boyut_genislik_le.setText(str(self.ebeveyn.pencere_boyut[0]))
         self.boyut_yukseklik_le.setText(str(self.ebeveyn.pencere_boyut[1]))
         self.konum_x_le.setText(str(self.ebeveyn.pencere_konum[0]))
@@ -96,6 +133,10 @@ class Ayarlar_Stacked(QWidget):
         self.treeWidgetDoldur()
 
     def uygula_fonk(self):
+        self.ebeveyn.baslatici_boyut = (int(self.baslat_genislik_le.text()),int(self.baslat_genislik_le.text()))
+        self.ebeveyn.ayarlar.setValue("baslatici_boyut",self.ebeveyn.baslatici_boyut)
+        self.ebeveyn.baslatici_konum = (int(self.baslat_x_le.text()),int(self.baslat_y_le.text()))
+        self.ebeveyn.ayarlar.setValue("baslatici_konum",self.ebeveyn.baslatici_konum)
         self.ebeveyn.pencere_boyut = (int(self.boyut_genislik_le.text()),int(self.boyut_yukseklik_le.text()))
         self.ebeveyn.ayarlar.setValue("pencere_boyutu",self.ebeveyn.pencere_boyut)
         self.ebeveyn.pencere_konum = (int(self.konum_x_le.text()),int(self.konum_y_le.text()))

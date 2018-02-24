@@ -53,7 +53,7 @@ class Dosya_Stacked(QWidget):
             secili = secili_item.text()
             pro = QProcess()
             pro.startDetached("xdg-open",[secili])
-            qApp.exit()
+            self.ebeveyn.hide()
 
     def yukari_basildi(self):
         secili_sira = self.dosya_sonuc_lw.currentRow()

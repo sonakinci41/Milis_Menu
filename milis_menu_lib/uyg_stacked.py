@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import (QWidget,QGridLayout,QListWidget,QListWidgetItem,QPushButton,qApp, QMenu, QAction)
+from PyQt5.QtWidgets import (QWidget,QGridLayout,QListWidget,QListWidgetItem,QPushButton, QMenu, QAction)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, Qt, QSignalMapper, QPoint, QProcess
 from milis_menu_lib import uygulama_ara
@@ -250,7 +250,7 @@ class Uyg_Stacked(QWidget):
             secili = secili_item.text()
             if secili != "":
                 self.uygulama_baslat(secili)
-                qApp.exit()
+                self.ebeveyn.hide()
 
     def aranan_degisti(self,kelime):
         self.uygulama_ara_lw.clear()

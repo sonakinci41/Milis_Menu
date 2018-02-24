@@ -2,14 +2,36 @@
 import sys,os, getpass
 from milis_menu_lib import uyg_stacked, int_stacked, dosya_stacked, ayarlar_stacked
 from PyQt5.QtWidgets import (QDialog,QApplication,QLineEdit,QHBoxLayout,QPushButton,QStackedWidget,
-                             QVBoxLayout, QMenu, QAction, qApp)
+                             QVBoxLayout, QMenu, QAction)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, Qt, QProcess, QSettings
+
+class Baslatici(QDialog):
+    def __init__(self, ebeveyn=None):
+        super(Baslatici, self).__init__(ebeveyn)
+        self.setWindowFlags(Qt.WindowStaysOnTopHint|Qt.FramelessWindowHint)
+        kutu = QHBoxLayout()
+        kutu.setContentsMargins(1,1,1,1)
+        self.setStyleSheet('QDialog{border: 1px solid;}')
+        self.setLayout(kutu)
+        self.dugme = QPushButton()
+        kutu.addWidget(self.dugme)
+        self.dugme.clicked.connect(self.baslat)
+        self.merkez_pencere = MerkezPencere(self)
+        self.dugme.setIcon(QIcon(self.merkez_pencere.icon_yolu+"milis_menu.svg"))
+        self.dugme.setStyleSheet("border:none;")
+        self.dugme.setIconSize(QSize(self.merkez_pencere.baslatici_boyut[0],self.merkez_pencere.baslatici_boyut[1]))
+        self.setGeometry(0,0,self.merkez_pencere.baslatici_boyut[0],self.merkez_pencere.baslatici_boyut[1])
+        self.move(self.merkez_pencere.baslatici_konum[0],self.merkez_pencere.baslatici_konum[1])
+
+    def baslat(self):
+        self.merkez_pencere.show()
 
 class MerkezPencere(QDialog):
     def __init__(self, ebeveyn=None):
         super(MerkezPencere, self).__init__(ebeveyn)
         #Menu Ayarları
+        self.ebeveyn = ebeveyn
         self.ayarlar = QSettings()
         self.pencere_boyut = self.ayarlar.value("pencere_boyutu",type=tuple) or (500,350)
         self.pencere_konum = self.ayarlar.value("pencere_konum",type=tuple) or (0,350)
@@ -18,6 +40,8 @@ class MerkezPencere(QDialog):
         self.tarayici_vars = self.ayarlar.value("tarayici_vars",type=str) or "firefox"
         self.icon_boyutu = self.ayarlar.value("icon_boyutu",type=int) or 32
         self.uyg_sagtik_gerekler = self.ayarlar.value("uyg_sagtik_gerekler",type=dict) or {"Aç":"#exec"}
+        self.baslatici_konum = self.ayarlar.value("baslatici_konum",type=tuple) or (0,300)
+        self.baslatici_boyut = self.ayarlar.value("baslatici_boyut",type=tuple) or (50,50)
 
         self.setGeometry(0,0,self.pencere_boyut[0],self.pencere_boyut[1])
         self.move(self.pencere_konum[0],self.pencere_konum[1])
@@ -107,9 +131,6 @@ class MerkezPencere(QDialog):
 
         self.arama_le.setFocus(True)#focus arama kısmına
 
-    def hideEvent(self, event):
-        qApp.exit()
-
     def ayarlar_basildi(self):
         self.aktif_bolum = "ayarlar"
         self.arama_sk.setCurrentIndex(3)
@@ -118,17 +139,17 @@ class MerkezPencere(QDialog):
     def cikis_basildi(self):
         pro = QProcess()
         pro.startDetached("pkill", ["-KILL","-u",getpass.getuser()])
-        qApp.exit()
+        self.hide()
 
     def yen_bas_basildi(self):
         pro = QProcess()
         pro.startDetached("shutdown", ["-r","now"])
-        qApp.exit()
+        self.hide()
 
     def kapat_basildi(self):
         pro = QProcess()
         pro.startDetached("shutdown", ["-h","now"])
-        qApp.exit()
+        self.hide()
 
     def button_ayarla(self,secilen):
         self.arama_le.setDisabled(False)
@@ -182,7 +203,7 @@ class MerkezPencere(QDialog):
                 pro = QProcess()
                 komut = ["-hold","-e"] + yazilan[2:].split()
                 pro.startDetached(self.konsol_vars, komut)
-                qApp.exit()
+                self.hide()
             elif self.aktif_bolum == "uygulama":
                 self.uygulama_bolumu.enter_basildi()
             elif self.aktif_bolum == "dosya":
@@ -208,7 +229,6 @@ if __name__ == "__main__":
     app_ = QApplication(sys.argv)
     app_.setOrganizationName('Milis Menu')
     app_.setApplicationName('milis_menu')
-    app_.setQuitOnLastWindowClosed(True)
-    pencere = MerkezPencere()
+    pencere = Baslatici()
     pencere.show()
     sys.exit(app_.exec_())
