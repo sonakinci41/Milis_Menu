@@ -21,7 +21,7 @@ class Baslatici(QDialog):
         self.dugme.setIcon(QIcon(self.merkez_pencere.icon_yolu+"milis_menu.svg"))
         self.dugme.setStyleSheet("border:none;")
         self.dugme.setIconSize(QSize(self.merkez_pencere.baslatici_boyut[0],self.merkez_pencere.baslatici_boyut[1]))
-        self.setGeometry(0,0,self.merkez_pencere.baslatici_boyut[0],self.merkez_pencere.baslatici_boyut[1])
+        self.setFixedSize(self.merkez_pencere.baslatici_boyut[0],self.merkez_pencere.baslatici_boyut[1])
         self.move(self.merkez_pencere.baslatici_konum[0],self.merkez_pencere.baslatici_konum[1])
 
     def baslat(self):
@@ -43,7 +43,7 @@ class MerkezPencere(QDialog):
         self.baslatici_konum = self.ayarlar.value("baslatici_konum",type=tuple) or (0,300)
         self.baslatici_boyut = self.ayarlar.value("baslatici_boyut",type=tuple) or (50,50)
 
-        self.setGeometry(0,0,self.pencere_boyut[0],self.pencere_boyut[1])
+        self.setFixedSize(self.pencere_boyut[0],self.pencere_boyut[1])
         self.move(self.pencere_konum[0],self.pencere_konum[1])
         self.setWindowFlags(Qt.Popup)
         self.setStyleSheet('QDialog{border: 1px solid;}')

@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (QWidget,QGridLayout,QLabel,QPushButton,QLineEdit, QTreeWidget, QTreeWidgetItem, QDialog,
                              QScrollArea)
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QSize
 
 class Ayarlar_Stacked(QWidget):
     def __init__(self, ebeveyn=None):
@@ -133,7 +133,7 @@ class Ayarlar_Stacked(QWidget):
         self.treeWidgetDoldur()
 
     def uygula_fonk(self):
-        self.ebeveyn.baslatici_boyut = (int(self.baslat_genislik_le.text()),int(self.baslat_genislik_le.text()))
+        self.ebeveyn.baslatici_boyut = (int(self.baslat_genislik_le.text()),int(self.baslat_yukseklik_le.text()))
         self.ebeveyn.ayarlar.setValue("baslatici_boyut",self.ebeveyn.baslatici_boyut)
         self.ebeveyn.baslatici_konum = (int(self.baslat_x_le.text()),int(self.baslat_y_le.text()))
         self.ebeveyn.ayarlar.setValue("baslatici_konum",self.ebeveyn.baslatici_konum)
@@ -148,7 +148,12 @@ class Ayarlar_Stacked(QWidget):
         self.ebeveyn.icon_boyutu = int(self.icon_b_vars_le.text())
         self.ebeveyn.ayarlar.setValue("icon_boyutu",self.ebeveyn.icon_boyutu)
         self.ebeveyn.ayarlar.setValue("uyg_sagtik_gerekler",self.ebeveyn.uyg_sagtik_gerekler)
-
+        #uygula
+        self.ebeveyn.ebeveyn.setFixedSize(self.ebeveyn.baslatici_boyut[0],self.ebeveyn.baslatici_boyut[1])
+        self.ebeveyn.ebeveyn.dugme.setIconSize(QSize(self.ebeveyn.baslatici_boyut[0],self.ebeveyn.baslatici_boyut[1]))
+        self.ebeveyn.ebeveyn.move(self.ebeveyn.baslatici_konum[0], self.ebeveyn.baslatici_konum[1])
+        self.ebeveyn.setFixedSize(self.ebeveyn.pencere_boyut[0],self.ebeveyn.pencere_boyut[1])
+        self.ebeveyn.move(self.ebeveyn.pencere_konum[0], self.ebeveyn.pencere_konum[1])
 
 class EklePencere(QDialog):
     def __init__(self, ebeveyn=None):
