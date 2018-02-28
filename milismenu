@@ -4,31 +4,7 @@ from milis_menu_lib import uyg_stacked, int_stacked, dosya_stacked, ayarlar_stac
 from PyQt5.QtWidgets import (QDialog,QApplication,QLineEdit,QHBoxLayout,QPushButton,QStackedWidget,
                              QVBoxLayout, QMenu, QAction, qApp)
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QSize, Qt, QProcess, QSettings, QObject, pyqtSignal
-from PyQt5.QtNetwork import QLocalServer, QLocalSocket
-
-class SingleApplication(QObject):
-    urlPost = pyqtSignal(bytearray)
-    def __init__(self):
-        super().__init__()
-        self.mServer = QLocalServer()
-        self.mServer.newConnection.connect(self.newConnection)
-    def listen(self, client):
-        self.mServer.removeServer(client)
-        self.mServer.listen(client)
-    def hasPrevious(self, name, args):
-        socket = QLocalSocket()
-        socket.connectToServer(name, QLocalSocket.ReadWrite)
-        if socket.waitForConnected():
-            if len(args) > 1:
-                socket.write(bytearray(args[1], encoding="utf-8"))
-            socket.flush()
-            return True
-        return False
-    def newConnection(self):
-        self.mSocket = self.mServer.nextPendingConnection()
-        self.urlPost.emit(bytearray(self.mSocket.readAll()))
-        self.mSocket.close()
+from PyQt5.QtCore import QSize, Qt, QProcess, QSettings
 
 class MerkezPencere(QDialog):
     def __init__(self, ebeveyn=None):
@@ -132,8 +108,8 @@ class MerkezPencere(QDialog):
 
         self.arama_le.setFocus(True)#focus arama kısmına
 
-    def goster(self, arg=None):
-        self.show()
+    def hideEvent(self, event):
+        qApp.quit()
 
     def ayarlar_basildi(self):
         self.aktif_bolum = "ayarlar"
@@ -229,19 +205,10 @@ class MerkezPencere(QDialog):
             elif self.aktif_bolum == "internet":
                 self.internet_bolumu.asagi_basildi()
 
-def main():
+if __name__ == "__main__":
     app_ = QApplication(sys.argv)
     app_.setOrganizationName('Milis Menu')
     app_.setApplicationName('milis_menu')
-    app_.setQuitOnLastWindowClosed(False)
-    single = SingleApplication()
-    if single.hasPrevious('milis_menu', app_.arguments()):
-        return False
-    single.listen('milis_menu')
     pencere = MerkezPencere()
-    single.urlPost.connect(pencere.goster)
     pencere.show()
     sys.exit(app_.exec_())
-
-if __name__ == "__main__":
-    main()
