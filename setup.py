@@ -4,7 +4,8 @@ import glob
 
 datas = [('/usr/share/applications', ['data/milismenu.desktop']),
          ('/usr/share/icons/hicolor/256x256/apps', ['simgeler/milis_menu.svg']),
-         ('/usr/share/milis_menu/simgeler',glob.glob("simgeler/*.svg")),]
+         ('/usr/share/milis_menu/simgeler',glob.glob("simgeler/*.svg")),
+         ('/usr/share/milis_menu/simgeler',glob.glob("simgeler/*.png")),]
 
 
 setup(

@@ -19,7 +19,6 @@ class Ara(object):
                 if control == "No":
                     self.uygulamalar[ayiklanmis[0]] = ayiklanmis
                 self.kategori_ekle(ayiklanmis)
-        return  self.uygulamalar
 
     def ac_ve_oku(self,dosya_adi):
         """.desktop dosyasını açıp okuyoruz ve satırları döndürüyoruz"""

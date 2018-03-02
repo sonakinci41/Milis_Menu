@@ -2,7 +2,7 @@
 import sys,os, getpass
 from milis_menu_lib import uyg_stacked, int_stacked, dosya_stacked, ayarlar_stacked
 from PyQt5.QtWidgets import (QDialog,QApplication,QLineEdit,QHBoxLayout,QPushButton,QStackedWidget,
-                             QVBoxLayout, QMenu, QAction, qApp)
+                             QVBoxLayout, QMenu, QAction, qApp, QSystemTrayIcon)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, Qt, QProcess, QSettings
 
@@ -33,6 +33,10 @@ class MerkezPencere(QDialog):
         else:
             self.icon_yolu = "simgeler/"
 
+        tablaSimgesi = QSystemTrayIcon(self)
+        tablaSimgesi.setIcon(QIcon(self.icon_yolu+"milis_menu.png"))
+        tablaSimgesi.show()
+        tablaSimgesi.activated.connect(self.show)
 
         kutu = QVBoxLayout()
         kutu.setContentsMargins(1,1,1,1)
@@ -107,9 +111,6 @@ class MerkezPencere(QDialog):
         self.ayarlar_pb.clicked.connect(self.ayarlar_basildi)
 
         self.arama_le.setFocus(True)#focus arama kısmına
-
-    def hideEvent(self, event):
-        qApp.quit()
 
     def ayarlar_basildi(self):
         self.aktif_bolum = "ayarlar"
@@ -210,5 +211,4 @@ if __name__ == "__main__":
     app_.setOrganizationName('Milis Menu')
     app_.setApplicationName('milis_menu')
     pencere = MerkezPencere()
-    pencere.show()
     sys.exit(app_.exec_())

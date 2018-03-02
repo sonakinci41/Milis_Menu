@@ -226,6 +226,7 @@ class Uyg_Stacked(QWidget):
         aranan = uygulama_ara.Ara(self)
         self.uygulamalar = aranan.uygulamalar
         self.kategori_sozluk = aranan.kategori_sozluk
+        del aranan
 
     def uygulama_baslat(self,isim):
         """uygulamayı exec teki komutu kullanarak subprocess popen ile çalıştırıyorız"""
