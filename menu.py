@@ -9,6 +9,8 @@ class AramaPencere(Gtk.Window):
 		self.set_border_width(0)
 		self.set_default_size(400,200)
 		self.set_resizable(False)
+		self.set_position(Gtk.WindowPosition.MOUSE)
+		self.set_type_hint(Gdk.WindowTypeHint.UTILITY)
 
 		self.list_program_sayisi = -1
 		self.hb = Gtk.HeaderBar()
@@ -20,7 +22,6 @@ class AramaPencere(Gtk.Window):
 		self.hb.pack_start(self.arama)
 
 		self.islem_liste = Gtk.ListStore(Gio.ThemedIcon(), str, str)
-		self.islem_liste_doldur()
 
 		self.liste = Gtk.TreeView(model=self.islem_liste)
 		self.scroll = Gtk.ScrolledWindow()
@@ -37,6 +38,8 @@ class AramaPencere(Gtk.Window):
 		sutun = Gtk.TreeViewColumn('Program Adı', sutun_text, text=1)
 		self.liste.append_column(sutun)
 		self.connect("key-press-event",self.tus_basildi)
+
+		self.islem_liste_doldur()
 		self.set_focus(self.arama)
 
 	def tus_basildi(self, widget, event):
