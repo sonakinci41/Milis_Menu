@@ -6,6 +6,7 @@ from gi.repository import Gio, Gtk, Gdk
 class AramaPencere(Gtk.Window):
 	def __init__(self):
 		Gtk.Window.__init__(self)
+		#Pencere özellikleri
 		self.set_border_width(0)
 		self.set_default_size(400,200)
 		self.set_resizable(False)
@@ -13,14 +14,24 @@ class AramaPencere(Gtk.Window):
 		self.set_type_hint(Gdk.WindowTypeHint.UTILITY)
 		self.connect('notify::is-active', self.aktif_degisti)
 
+		#Listeye eklenen toplam program sayısını tutmak için bir değişken
 		self.list_program_sayisi = -1
+
 		self.hb = Gtk.HeaderBar()
-		self.hb.set_show_close_button(True)
 		self.set_titlebar(self.hb)
 
 		self.arama = Gtk.SearchEntry(max_width_chars=45)
 		self.arama.connect("search-changed", self.arama_degisti)
 		self.hb.pack_start(self.arama)
+
+		self.kapat_dugme = Gtk.Button()
+		self.kapat_dugme.connect("clicked",self.kapat_basildi)
+		self.kapat_dugme.set_always_show_image(True)
+		resim = Gtk.Image()
+		resim.set_from_stock(Gtk.STOCK_QUIT,Gtk.IconSize.BUTTON)
+		self.kapat_dugme.set_image(resim)
+		self.hb.pack_end(self.kapat_dugme)
+
 
 		self.islem_liste = Gtk.ListStore(Gio.ThemedIcon(), str, str)
 
@@ -43,6 +54,10 @@ class AramaPencere(Gtk.Window):
 		self.islem_liste_doldur()
 		self.set_focus(self.arama)
 
+	def kapat_basildi(self,widget):
+		subprocess.Popen(["xfce4-session-logout"], stdout=subprocess.PIPE)
+		self.destroy()
+		 
 	def aktif_degisti(self,pencere,param):
 		if not self.is_active():
 			self.destroy()
