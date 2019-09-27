@@ -11,6 +11,7 @@ class AramaPencere(Gtk.Window):
 		self.set_resizable(False)
 		self.set_position(Gtk.WindowPosition.MOUSE)
 		self.set_type_hint(Gdk.WindowTypeHint.UTILITY)
+		self.connect('notify::is-active', self.aktif_degisti)
 
 		self.list_program_sayisi = -1
 		self.hb = Gtk.HeaderBar()
@@ -41,6 +42,10 @@ class AramaPencere(Gtk.Window):
 
 		self.islem_liste_doldur()
 		self.set_focus(self.arama)
+
+	def aktif_degisti(self,pencere,param):
+		if not self.is_active():
+			self.destroy()
 
 	def tus_basildi(self, widget, event):
 		if self.get_focus() != self.arama:
@@ -85,6 +90,9 @@ class AramaPencere(Gtk.Window):
 			self.islem_liste.append([uyg.get_icon(), uyg.get_name(),uyg.get_executable()])
 			self.list_program_sayisi += 1
 
+
+	def do_activate_focus(self):
+		print("HAHA")
 
 if __name__ == '__main__':
 	pen = AramaPencere()
