@@ -36,6 +36,7 @@ class AramaPencere(Gtk.Window):
 		self.islem_liste = Gtk.ListStore(Gio.ThemedIcon(), str, str)
 
 		self.liste = Gtk.TreeView(model=self.islem_liste)
+		self.liste.connect("row-activated",self.liste_tiklandi)
 		self.scroll = Gtk.ScrolledWindow()
 		self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
 		self.scroll.add(self.liste)
@@ -48,6 +49,8 @@ class AramaPencere(Gtk.Window):
 
 		sutun_text = Gtk.CellRendererText()
 		sutun = Gtk.TreeViewColumn('Program Adı', sutun_text, text=1)
+		sutun.set_sort_column_id(1)
+		self.islem_liste.set_sort_column_id(1,Gtk.SortType.ASCENDING)
 		self.liste.append_column(sutun)
 		self.connect("key-press-event",self.tus_basildi)
 
@@ -67,10 +70,7 @@ class AramaPencere(Gtk.Window):
 			self.set_focus(self.arama)
 		basili_tus = event.keyval
 		if basili_tus == Gdk.KEY_Return:
-			selection = self.liste.get_selection()
-			tree_model, tree_iter = selection.get_selected()
-			subprocess.Popen(tree_model[tree_iter][2].split(), stdout=subprocess.PIPE)
-			self.destroy()
+			self.liste_tiklandi()
 		elif basili_tus == Gdk.KEY_Up:
 			path_, coloumn_ = self.liste.get_cursor()
 			secili = path_.get_indices()[0]
@@ -81,6 +81,12 @@ class AramaPencere(Gtk.Window):
 			secili = path_.get_indices()[0]
 			if self.list_program_sayisi > int(secili):
 				self.liste.set_cursor(secili + 1)
+
+	def liste_tiklandi(self,widget=None,path=None,coloumn=None):
+		selection = self.liste.get_selection()
+		tree_model, tree_iter = selection.get_selected()
+		subprocess.Popen(tree_model[tree_iter][2].split(), stdout=subprocess.PIPE)
+		self.destroy()
 
 	def arama_degisti(self, kelime):
 		self.islem_liste.clear()
@@ -104,10 +110,8 @@ class AramaPencere(Gtk.Window):
 		for uyg in tamami:
 			self.islem_liste.append([uyg.get_icon(), uyg.get_name(),uyg.get_executable()])
 			self.list_program_sayisi += 1
-
-
-	def do_activate_focus(self):
-		print("HAHA")
+		self.liste.set_cursor(0)
+		
 
 if __name__ == '__main__':
 	pen = AramaPencere()
