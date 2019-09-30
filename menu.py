@@ -8,8 +8,8 @@ class AramaPencere(Gtk.Window):
 		Gtk.Window.__init__(self)
 		#Pencere özellikleri
 		self.set_border_width(0)
-		self.set_default_size(400,200)
-		self.set_resizable(False)
+		self.set_default_size(400,275)
+		#self.set_resizable(False)
 		self.set_position(Gtk.WindowPosition.MOUSE)
 		self.set_type_hint(Gdk.WindowTypeHint.UTILITY)
 		self.connect('notify::is-active', self.aktif_degisti)
@@ -42,6 +42,7 @@ class AramaPencere(Gtk.Window):
 
 		self.kategori_list_store = Gtk.ListStore(Gio.ThemedIcon(), str)
 		self.kategori_tree = Gtk.TreeView(model=self.kategori_list_store)
+		#self.kategori_tree.activate_on_single_click(True)
 		self.kategori_tree.connect("row-activated",self.kategori_liste_tiklandi)
 		scroll_1 = Gtk.ScrolledWindow()
 		scroll_1.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
@@ -159,9 +160,9 @@ class AramaPencere(Gtk.Window):
 		self.uygulama_tree.set_cursor(0)
 
 	def kategori_kontrol(self,uygulama,kategoriler=None):
-		if kategoriler == None:
+		if kategoriler == None or kategoriler[:-1] == [None]:
 			return True
-		for kategori in kategoriler:
+		for kategori in kategoriler[:-1]:
 			if uygulama.get_categories() != None and kategori in uygulama.get_categories():
 				return True
 		return False
