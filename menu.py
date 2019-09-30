@@ -42,7 +42,7 @@ class AramaPencere(Gtk.Window):
 
 		self.kategori_list_store = Gtk.ListStore(Gio.ThemedIcon(), str)
 		self.kategori_tree = Gtk.TreeView(model=self.kategori_list_store)
-		#self.kategori_tree.activate_on_single_click(True)
+		self.kategori_tree.set_property('activate-on-single-click', True)#Tek tıklama için
 		self.kategori_tree.connect("row-activated",self.kategori_liste_tiklandi)
 		scroll_1 = Gtk.ScrolledWindow()
 		scroll_1.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
@@ -55,7 +55,6 @@ class AramaPencere(Gtk.Window):
 		sutun_text = Gtk.CellRendererText()
 		sutun = Gtk.TreeViewColumn('Kategori', sutun_text, text=1)
 		sutun.set_sort_column_id(1)
-		#self.kategori_list_store.set_sort_column_id(1,Gtk.SortType.ASCENDING)
 		self.kategori_tree.append_column(sutun)
 
 
@@ -66,6 +65,7 @@ class AramaPencere(Gtk.Window):
 
 		self.uygulama_list_store = Gtk.ListStore(Gio.ThemedIcon(), str, str)
 		self.uygulama_tree = Gtk.TreeView(model=self.uygulama_list_store)
+		self.uygulama_tree.set_property('activate-on-single-click', True)#Tek tıklama için
 		self.uygulama_tree.connect("row-activated",self.uygulama_tree_tiklandi)
 		scroll_2 = Gtk.ScrolledWindow()
 		scroll_2.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
