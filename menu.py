@@ -7,7 +7,7 @@ class AramaPencere(Gtk.Window):
 	def __init__(self):
 		Gtk.Window.__init__(self)
 		#Pencere özellikleri
-		self.set_border_width(0)
+		self.set_border_width(5)
 		self.set_default_size(400,275)
 		#self.set_resizable(False)
 		self.set_position(Gtk.WindowPosition.MOUSE)
@@ -56,6 +56,7 @@ class AramaPencere(Gtk.Window):
 		sutun = Gtk.TreeViewColumn('Kategori', sutun_text, text=1)
 		sutun.set_sort_column_id(1)
 		self.kategori_tree.append_column(sutun)
+		self.kategori_tree.set_headers_visible(False)
 
 
 		for kategori in self.kategori_sozluk.keys():
@@ -80,6 +81,7 @@ class AramaPencere(Gtk.Window):
 		sutun.set_sort_column_id(1)
 		self.uygulama_list_store.set_sort_column_id(1,Gtk.SortType.ASCENDING)
 		self.uygulama_tree.append_column(sutun)
+		self.uygulama_tree.set_headers_visible(False)
 		self.connect("key-press-event",self.tus_basildi)
 
 		self.uygulama_list_store_doldur()
