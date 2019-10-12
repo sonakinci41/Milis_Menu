@@ -32,8 +32,7 @@ class AramaPencere(Gtk.Window):
 		self.kapat_dugme = Gtk.Button()
 		self.kapat_dugme.connect("clicked",self.kapat_basildi)
 		self.kapat_dugme.set_always_show_image(True)
-		resim = Gtk.Image()
-		resim.set_from_stock(Gtk.STOCK_QUIT,Gtk.IconSize.BUTTON)
+		resim = Gtk.Image.new_from_icon_name("system-log-out",Gtk.IconSize.LARGE_TOOLBAR)
 		self.kapat_dugme.set_image(resim)
 		self.hb.pack_end(self.kapat_dugme)
 
