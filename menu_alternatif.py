@@ -1,6 +1,6 @@
 import gi, subprocess, os
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gio, Gtk, Gdk
+from gi.repository import Gio, Gtk, Gdk, GdkPixbuf
 
 
 class AramaPencere(Gtk.Window):
@@ -9,7 +9,7 @@ class AramaPencere(Gtk.Window):
 		#Pencere için gerekli bayraklar boyut vs.
 		self.set_type_hint(Gdk.WindowTypeHint.UTILITY)
 		self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
-		self.set_size_request(430,30)
+		self.set_size_request(440,30)
 		self.set_border_width(5)
 		self.set_resizable(False)
 		self.set_decorated(False)
@@ -73,7 +73,7 @@ class AramaPencere(Gtk.Window):
 			self.liste_pencere.liste_tree_doldur(uygun_uygulamalar)
 			if not self.liste_pencere.get_property("visible"):
 				self.liste_pencere.show_all()
-				self.liste_pencere.move(arama_x,arama_y+45)
+				self.liste_pencere.move(arama_x,arama_y+65)
 
 	def kapat_basildi(self,widget):
 		subprocess.Popen(["xfce4-session-logout"], stdout=subprocess.PIPE)
@@ -146,7 +146,7 @@ class ListePencere(Gtk.Window):
 		self.ebeveyn = ebeveyn
 		#Pencere için gerekli bayraklar boyut vs.
 		self.set_type_hint(Gdk.WindowTypeHint.NOTIFICATION)
-		self.set_size_request(430,290)
+		self.set_size_request(440,290)
 		self.set_border_width(5)
 		self.set_resizable(False)
 		self.set_decorated(False)
@@ -155,7 +155,7 @@ class ListePencere(Gtk.Window):
 		tasiyici_kutu.set_spacing(5)
 		self.add(tasiyici_kutu)
 
-		self.liste_store = Gtk.ListStore(Gio.ThemedIcon(), str,str)
+		self.liste_store = Gtk.ListStore(GdkPixbuf.Pixbuf, str,str)
 		self.liste_tree = Gtk.TreeView(model=self.liste_store)
 		self.liste_tree.set_property('activate-on-single-click', True)#Tek tıklama için
 		self.liste_tree.connect("row-activated",self.liste_tree_tiklandi)
@@ -186,6 +186,7 @@ class ListePencere(Gtk.Window):
 		ekliyoruz"""
 		self.liste_store.clear()
 		self.liste_toplam_uygulama = len(uygulamalar)
+		icon_tema = Gtk.IconTheme().get_default()
 		for uygulama_bilgi in uygulamalar:
 			adi = uygulama_bilgi.get("Adi", False)
 			adi_turkce = uygulama_bilgi.get("Adi_Turkce", False)
@@ -197,10 +198,12 @@ class ListePencere(Gtk.Window):
 			#Varsayılan olarak uygulama adı ve simge ekliyoruz
 			#Simge veya ad gelmemesi durumunda hatadan kurtulmak için
 			uyg_adi = adi
-			uyg_simge = Gio.ThemedIcon.new("default-application")
 			#Temadan simge adına uygun simge istiyoruz
 			if simge:
-				uyg_simge = Gio.ThemedIcon.new(simge)
+				if os.path.isfile(simge):
+					uyg_simge = GdkPixbuf.Pixbuf.new_from_file(simge)
+				else:
+					uyg_simge = icon_tema.load_icon(simge,32,Gtk.IconLookupFlags.FORCE_SIZE)
 			#Türkçe veya diğer açıklamayı uygulama adına ekliyoruz
 			if aciklama_turkce:
 				uyg_adi += "\n"+aciklama_turkce
