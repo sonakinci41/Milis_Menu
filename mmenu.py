@@ -154,6 +154,7 @@ class MAppStack(Gtk.HPaned):
 				p_b = GdkPixbuf.Pixbuf.new_from_file_at_size(self.parent.icon_dir+"System.svg",
 															self.icon_size,
 															self.icon_size)
+				print(app[0])
 			else:
 				p_b = self.get_icon(app[2].to_string())
 			self.apps_store.append([app[0],p_b,app[3]])
@@ -162,9 +163,14 @@ class MAppStack(Gtk.HPaned):
 		try:
 			icon = self.d_icon_theme.load_icon(icon_name,self.icon_size,Gtk.IconLookupFlags.FORCE_REGULAR)
 		except:
-			icon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.parent.icon_dir+"System.svg",
-															self.icon_size,
-															self.icon_size)
+			if os.path.exists(icon_name):
+				icon =  GdkPixbuf.Pixbuf.new_from_file_at_size(icon_name,
+																self.icon_size,
+																self.icon_size)
+			else:
+				icon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.parent.icon_dir+"System.svg",
+																self.icon_size,
+																self.icon_size)
 		return icon
 
 
