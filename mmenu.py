@@ -88,6 +88,10 @@ class MAppStack(Gtk.HPaned):
 		self.set_position(175)
 		self.d_icon_theme = Gtk.IconTheme.get_default()
 
+		#Settings
+		self.icon_size = 32
+
+
 
 		l_box = Gtk.HBox()
 		r_box = Gtk.HBox()
@@ -97,9 +101,8 @@ class MAppStack(Gtk.HPaned):
 
 		self.cteg_store = Gtk.ListStore(GdkPixbuf.Pixbuf,str)
 		self.cteg_list = Gtk.TreeView(model=self.cteg_store)
-		self.cteg_list.connect("row-activated",self.activated_cteg_list)
+		self.cteg_list.connect("cursor-changed",self.activated_cteg_list)
 		renderer = Gtk.CellRendererPixbuf()
-		renderer.set_fixed_size(32,32)
 		coloumn = Gtk.TreeViewColumn("Icon",renderer, gicon = 0)
 		self.cteg_list.append_column(coloumn)
 		renderer = Gtk.CellRendererText()
@@ -115,6 +118,9 @@ class MAppStack(Gtk.HPaned):
 		r_box.pack_start(self.set_scroll_win(self.apps_list),True,True,10)
 
 		self.set_categories()
+
+		#Default Selection List
+		self.cteg_list.set_cursor(0)
 
 
 	def set_scroll_win(self,list_):
@@ -134,7 +140,7 @@ class MAppStack(Gtk.HPaned):
 				self.cteg_store.append([icon,category])
 
 
-	def activated_cteg_list(self,widget,path,coloumn):
+	def activated_cteg_list(self,widget):
 		selection = widget.get_selection()
 		tree_model, tree_iter = selection.get_selected()
 		categories = tree_model[tree_iter][1]
@@ -145,16 +151,20 @@ class MAppStack(Gtk.HPaned):
 		self.apps_store.clear()
 		for app in apps:
 			if app[2] == None:
-				p_b = GdkPixbuf.Pixbuf.new_from_file(self.parent.icon_dir+"System.svg")
+				p_b = GdkPixbuf.Pixbuf.new_from_file_at_size(self.parent.icon_dir+"System.svg",
+															self.icon_size,
+															self.icon_size)
 			else:
 				p_b = self.get_icon(app[2].to_string())
 			self.apps_store.append([app[0],p_b,app[3]])
 
 	def get_icon(self,icon_name):
 		try:
-			icon = self.d_icon_theme.load_icon(icon_name,64,Gtk.IconLookupFlags.FORCE_REGULAR)
+			icon = self.d_icon_theme.load_icon(icon_name,self.icon_size,Gtk.IconLookupFlags.FORCE_REGULAR)
 		except:
-			icon = GdkPixbuf.Pixbuf.new_from_file(self.parent.icon_dir+"System.svg")
+			icon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.parent.icon_dir+"System.svg",
+															self.icon_size,
+															self.icon_size)
 		return icon
 
 
