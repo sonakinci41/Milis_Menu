@@ -21,7 +21,12 @@ class MMenu(Gtk.Window):
 							"Utility":[],
 							"Other":[],}
 		self.get_applications()
-		#print(self.categories)
+
+		#Settings
+		self.menu_with = 640
+		self.menu_height = 400
+		self.is_full_screen = True
+
 
 		self.icon_dir = os.path.expanduser("~/.config/mmenu/icons/")
 		if not os.path.exists(self.icon_dir):
@@ -32,24 +37,52 @@ class MMenu(Gtk.Window):
 		self.add(m_box)
 
 		search_entry = Gtk.SearchEntry()
+		search_entry.connect("search-changed",self.change_search_entry)
 		s_box = Gtk.HBox()
 		s_box.pack_start(search_entry,True,True,10)
 		m_box.pack_start(s_box,False,True,10)
 
 		switcher = Gtk.StackSwitcher()
 
-		stack = Gtk.Stack()
-		stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
-		stack.set_transition_duration(1000)
-		stack.add_titled(MAppStack(self),"apps","Applications")
-		stack.add_titled(MBinStack(self),"bins","Bins")
+		self.stack = Gtk.Stack()
+		self.stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+		self.stack.set_transition_duration(1000)
+		self.mapp_stack = MAppStack(self)
+		self.mbin_stack = MBinStack(self)
+		self.stack.add_titled(self.mapp_stack,"apps","Applications")
+		self.stack.add_titled(self.mbin_stack,"bins","Bins")
 
-		switcher.set_stack(stack)
+		switcher.set_stack(self.stack)
 		s_box = Gtk.HBox()
 		s_box.pack_start(switcher,True,False,0)
 		m_box.pack_start(s_box,False,True,0)
-		m_box.pack_end(stack,True,True,10)
+		m_box.pack_end(self.stack,True,True,10)
 
+
+		self.set_menu_position()
+
+
+	def set_menu_position(self):
+		if self.is_full_screen:
+			self.fullscreen()
+		else:
+			x,y,w,h = self.get_global_pointer()
+			if x < w/2:
+				x = 10
+			else:
+				x = w - 10 - self.menu_with
+			if y < h/2:
+				y = 10
+			else:
+				y = h - 10 - self.menu_height
+			self.move(x,y)
+			self.set_default_size(self.menu_with,self.menu_height)		
+
+
+	def get_global_pointer(self):
+		root_win = Gdk.get_default_root_window()
+		pointer = root_win.get_pointer()
+		return (pointer.x, pointer.y,root_win.get_width(),root_win.get_height())
 
 
 	def get_applications(self):
@@ -63,7 +96,7 @@ class MMenu(Gtk.Window):
 			exec_ = app.get_executable()
 			cteg_ = app.get_categories()
 			desktop_ = app.get_id()
-			app = [name_,desc_,icon_,exec_,desktop_]
+			app = [name_,desc_,icon_,app,desktop_,exec_]
 			self.set_categories(app,cteg_)
 
 
@@ -79,6 +112,30 @@ class MMenu(Gtk.Window):
 					if app not in self.categories["Multimedia"]:
 						self.categories["Multimedia"].append(app)
 		self.categories["All"].append(app)
+
+
+	def change_search_entry(self,widget):
+		search_text = widget.get_text().lower()
+		stack_name = self.stack.get_visible_child_name()
+		if stack_name == "apps":
+			self.mapp_stack.cteg_list.set_cursor(0)
+			if search_text != "":
+				find_apps = []
+				for app in self.categories["All"]:
+					name = app[0]
+					desc = app[1]
+					if name == None:
+						name = ""
+					if desc == None:
+						desc = ""
+					name = name.lower()
+					desc = desc.lower()
+					if search_text in name or search_text in desc:
+						find_apps.append(app)
+				self.mapp_stack.set_apps(find_apps)
+		elif stack_name == "bins":
+			print(search_text)
+
 
 
 class MAppStack(Gtk.HPaned):
@@ -111,8 +168,9 @@ class MAppStack(Gtk.HPaned):
 		l_box.pack_start(self.set_scroll_win(self.cteg_list),True,True,10)
 
 
-		self.apps_store = Gtk.ListStore(str,GdkPixbuf.Pixbuf,str)
+		self.apps_store = Gtk.ListStore(str,GdkPixbuf.Pixbuf,Gio.DesktopAppInfo)
 		self.apps_list = Gtk.IconView(model=self.apps_store)
+		self.apps_list.connect("item-activated",self.activated_apps_list)
 		self.apps_list.set_text_column(0)
 		self.apps_list.set_pixbuf_column(1)
 		r_box.pack_start(self.set_scroll_win(self.apps_list),True,True,10)
@@ -147,6 +205,13 @@ class MAppStack(Gtk.HPaned):
 		self.set_apps(self.parent.categories[categories])
 
 
+	def activated_apps_list(self,widget,path):
+		model = widget.get_model()
+		app = model[path][2]
+		app.launch(None,None)
+		self.parent.destroy()
+
+
 	def set_apps(self,apps):
 		self.apps_store.clear()
 		for app in apps:
@@ -154,10 +219,10 @@ class MAppStack(Gtk.HPaned):
 				p_b = GdkPixbuf.Pixbuf.new_from_file_at_size(self.parent.icon_dir+"System.svg",
 															self.icon_size,
 															self.icon_size)
-				print(app[0])
 			else:
 				p_b = self.get_icon(app[2].to_string())
 			self.apps_store.append([app[0],p_b,app[3]])
+
 
 	def get_icon(self,icon_name):
 		try:
