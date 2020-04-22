@@ -25,7 +25,7 @@ class MMenu(Gtk.Window):
 		#Settings
 		self.menu_with = 640
 		self.menu_height = 400
-		self.is_full_screen = True
+		self.is_full_screen = False
 
 
 		self.icon_dir = os.path.expanduser("~/.config/mmenu/icons/")
@@ -36,10 +36,10 @@ class MMenu(Gtk.Window):
 		#box.set_spacing(20)
 		self.add(m_box)
 
-		search_entry = Gtk.SearchEntry()
-		search_entry.connect("search-changed",self.change_search_entry)
+		self.search_entry = Gtk.SearchEntry()
+		self.search_entry.connect("search-changed",self.change_search_entry)
 		s_box = Gtk.HBox()
-		s_box.pack_start(search_entry,True,True,10)
+		s_box.pack_start(self.search_entry,True,True,10)
 		m_box.pack_start(s_box,False,True,10)
 
 		switcher = Gtk.StackSwitcher()
@@ -59,7 +59,24 @@ class MMenu(Gtk.Window):
 		m_box.pack_end(self.stack,True,True,10)
 
 
+		self.connect("key-press-event",self.key_press)
 		self.set_menu_position()
+
+
+	def key_press(self, widget, event):
+		key_name = Gdk.keyval_name(event.keyval)
+		stack_name = self.stack.get_visible_child_name()
+		if stack_name == "apps":
+			arrow_keys = ["Up","Down","Left","Right"]
+			if key_name in arrow_keys and not self.mapp_stack.is_focus():
+				self.mapp_stack.apps_list.grab_focus()
+			elif key_name == "Return":
+				self.mapp_stack.activated_apps_list(self.mapp_stack.apps_list,
+													self.mapp_stack.apps_list.get_selected_items()[0])
+			else:
+				if not self.search_entry.is_focus():
+					self.search_entry.grab_focus()
+			
 
 
 	def set_menu_position(self):
