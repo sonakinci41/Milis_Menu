@@ -205,7 +205,6 @@ shutdown_command = xfce4-session-logout --fast""")
 		Key press Enter run app,
 		Else focus entry"""
 		key_name = Gdk.keyval_name(event.keyval)
-		print(key_name)
 		arrow_keys = ["Up","Down","Left","Right"]
 		if key_name in arrow_keys:
 			self.apps_list.grab_focus()
