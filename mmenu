@@ -30,14 +30,19 @@ class MMenu(Gtk.Window):
 		self.logout_command = ""
 		self.restart_command = ""
 		self.shutdown_command = ""
+
 		self.d_icon_theme = Gtk.IconTheme.get_default()
 
 		#get local or other dir
-		self.icon_dir = os.path.expanduser("~/.config/mmenu/icons/")
-		if not os.path.exists(self.icon_dir):
+		self.config_dir = os.path.expanduser("~/.config/mmenu/")
+		if not os.path.exists(self.config_dir):
 			self.icon_dir = "./icons/"
+			self.config_dir = "config"
+		else:
+			self.icon_dir = os.path.expanduser("~/.config/mmenu/icons/")
+			self.config_dir = os.path.expanduser("~/.config/mmenu/config")
 
-
+		self.get_config_settings()
 		################################ UI #################################
 		#main box
 		m_box = Gtk.VBox()
@@ -53,9 +58,29 @@ class MMenu(Gtk.Window):
 		m_box.pack_start(s_box,False,True,10)
 
 		self.settings_button = Gtk.Button()
+		self.settings_button.connect("clicked",self.click_settings_button)
+		image = self.get_pixbuf_to_image("Settings.svg")
+		self.settings_button.set_image(image)
+		s_box.pack_start(self.settings_button,False,False,2)
+
 		self.logout_button = Gtk.Button()
+		self.logout_button.connect("clicked",self.click_logout_button)
+		image = self.get_pixbuf_to_image("Log-out.svg")
+		self.logout_button.set_image(image)
+		s_box.pack_start(self.logout_button,False,False,2)
+
 		self.restart_button = Gtk.Button()
+		self.restart_button.connect("clicked",self.click_restart_button)
+		image = self.get_pixbuf_to_image("Reboot.svg")
+		self.restart_button.set_image(image)
+		s_box.pack_start(self.restart_button,False,False,2)
+
 		self.shutdown_button = Gtk.Button()
+		self.shutdown_button.connect("clicked",self.click_shutdown_button)
+		image = self.get_pixbuf_to_image("Shutdown.svg")
+		self.shutdown_button.set_image(image)
+		s_box.pack_start(self.shutdown_button,False,False,2)
+
 
 		#Add Paned
 		paned = Gtk.HPaned()
@@ -98,6 +123,55 @@ class MMenu(Gtk.Window):
 		self.set_menu_position()
 		self.set_categories_ui()
 		self.cteg_list.set_cursor(0)
+
+
+	def get_config_settings(self):
+		f = open(self.config_dir,"r")
+		read = f.readlines()
+		f.close()
+		for col in read:
+			a = col.split(" = ")
+			dev = a[1].replace("\n","")
+			if a[0] == "menu_with":
+				self.menu_with = int(dev)
+			elif a[0] == "menu_height":
+				self.menu_height = int(dev)
+			elif a[0] == "is_full_screen":
+				self.is_full_screen = int(dev)
+			elif a[0] == "menu_close":
+				self.menu_close = int(dev)
+			elif a[0] == "icon_size":
+				self.icon_size = int(dev)
+			elif a[0] == "logout_command":
+				self.logout_command = dev
+			elif a[0] == "restart_command":
+				self.restart_command = dev
+			elif a[0] == "shutdown_command":
+				self.shutdown_command = dev
+
+	def click_settings_button(self,widget):
+		print("SETTİNGS")
+
+
+	def click_logout_button(self,widget):
+		if self.logout_command != "":
+			subprocess.call(self.logout_command.split())
+
+
+	def click_restart_button(self,widget):
+		if self.restart_command != "":
+			subprocess.call(self.restart_command.split())
+
+
+	def click_shutdown_button(self,widget):
+		if self.shutdown_command != "":
+			subprocess.call(self.shutdown_command.split())
+
+
+	def get_pixbuf_to_image(self,file_,size=24):
+		pb =  GdkPixbuf.Pixbuf.new_from_file_at_size(self.icon_dir+file_,size,size)
+		image = Gtk.Image.new_from_pixbuf(pb)
+		return image
 
 
 	def key_press(self, widget, event):
