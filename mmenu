@@ -1,0 +1,264 @@
+import gi, subprocess, os
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gio, Gtk, Gdk, GdkPixbuf
+
+
+class MMenu(Gtk.Window):
+	def __init__(self):
+		Gtk.Window.__init__(self)
+		self.categories = {"All":[],
+							"Favorites":[],
+							"Development":[],
+							"Education":[],
+							"Favorites":[],
+							"Game":[],
+							"Graphics":[],
+							"Multimedia":[],
+							"Network":[],
+							"Office":[],
+							"Science":[],
+							"System":[],
+							"Utility":[],
+							"Other":[],}
+
+		#Menu Settings
+		self.menu_with = 640
+		self.menu_height = 400
+		self.is_full_screen = False
+		self.menu_close = True
+		self.icon_size = 32
+		self.logout_command = ""
+		self.restart_command = ""
+		self.shutdown_command = ""
+		self.d_icon_theme = Gtk.IconTheme.get_default()
+
+		#get local or other dir
+		self.icon_dir = os.path.expanduser("~/.config/mmenu/icons/")
+		if not os.path.exists(self.icon_dir):
+			self.icon_dir = "./icons/"
+
+
+		################################ UI #################################
+		#main box
+		m_box = Gtk.VBox()
+		self.add(m_box)
+
+		#search entry add to machine
+		self.search_entry = Gtk.SearchEntry()
+		self.search_entry.connect("search-changed",self.change_search_entry)
+
+		#Entry add box center
+		s_box = Gtk.HBox()
+		s_box.pack_start(self.search_entry,True,True,10)
+		m_box.pack_start(s_box,False,True,10)
+
+		self.settings_button = Gtk.Button()
+		self.logout_button = Gtk.Button()
+		self.restart_button = Gtk.Button()
+		self.shutdown_button = Gtk.Button()
+
+		#Add Paned
+		paned = Gtk.HPaned()
+		m_box.pack_end(paned,True,True,10)
+		paned.set_position(175)
+
+		#Paned split left and right
+		l_box = Gtk.HBox()
+		r_box = Gtk.HBox()
+		paned.pack1(l_box)
+		paned.pack2(r_box)
+
+		#Categories Store-List
+		self.cteg_store = Gtk.ListStore(GdkPixbuf.Pixbuf,str)
+		self.cteg_list = Gtk.TreeView(model=self.cteg_store)
+		self.cteg_list.connect("cursor-changed",self.activated_cteg_list)
+		renderer = Gtk.CellRendererPixbuf()
+		coloumn = Gtk.TreeViewColumn("Icon",renderer, gicon = 0)
+		self.cteg_list.append_column(coloumn)
+		renderer = Gtk.CellRendererText()
+		coloumn = Gtk.TreeViewColumn("Categories",renderer, text = 1)
+		self.cteg_list.append_column(coloumn)
+		l_box.pack_start(self.set_scroll_win(self.cteg_list),True,True,10)
+
+		#Applications Store-List
+		self.apps_store = Gtk.ListStore(str,GdkPixbuf.Pixbuf,Gio.DesktopAppInfo)
+		self.apps_list = Gtk.IconView(model=self.apps_store)
+		self.apps_list.connect("item-activated",self.activated_apps_list)
+		self.apps_list.set_text_column(0)
+		self.apps_list.set_pixbuf_column(1)
+		r_box.pack_start(self.set_scroll_win(self.apps_list),True,True,10)
+		########################################################################
+
+
+		#Key press focus widget change
+		self.connect("key-press-event",self.key_press)
+
+		#Default Selection List
+		self.get_applications()
+		self.set_menu_position()
+		self.set_categories_ui()
+		self.cteg_list.set_cursor(0)
+
+
+	def key_press(self, widget, event):
+		"""Key press Arrows focus list,
+		Key press Enter run app,
+		Else focus entry"""
+		key_name = Gdk.keyval_name(event.keyval)
+		arrow_keys = ["Up","Down","Left","Right"]
+		if key_name in arrow_keys:
+			self.apps_list.grab_focus()
+		elif key_name == "Return":
+			self.activated_apps_list(self.apps_list,
+									self.apps_list.get_selected_items()[0])
+		else:
+			if not self.search_entry.is_focus():
+				self.search_entry.grab_focus()
+
+
+	def set_menu_position(self):
+		"""Menu is fullscreen
+		or menu left-right-top-bottom"""
+		if self.is_full_screen:
+			self.fullscreen()
+		else:
+			x,y,w,h = self.get_global_pointer()
+			if x < w/2:
+				x = 10
+			else:
+				x = w - 10 - self.menu_with
+			if y < h/2:
+				y = 10
+			else:
+				y = h - 10 - self.menu_height
+			self.move(x,y)
+			self.set_default_size(self.menu_with,self.menu_height)		
+
+
+	def get_global_pointer(self):
+		"""Global cursor position and screen size"""
+		root_win = Gdk.get_default_root_window()
+		pointer = root_win.get_pointer()
+		return (pointer.x, pointer.y,root_win.get_width(),root_win.get_height())
+
+
+	def get_applications(self):
+		"Applications get and set categories"
+		apps = Gio.DesktopAppInfo.get_all()
+		for app in apps:
+			name_ = app.get_name()
+			desc_ = app.get_description()
+			icon_ = app.get_icon()
+			mime_ = app.get_supported_types()
+			exec_ = app.get_executable()
+			cteg_ = app.get_categories()
+			desktop_ = app.get_id()
+			app = [name_,desc_,icon_,app,desktop_,exec_]
+			self.set_categories(app,cteg_)
+
+
+	def get_icon(self,icon_name):
+		"""Get icon theme or file path or default icon"""
+		try:
+			icon = self.d_icon_theme.load_icon(icon_name,self.icon_size,Gtk.IconLookupFlags.FORCE_REGULAR)
+		except:
+			if os.path.exists(icon_name):
+				icon =  GdkPixbuf.Pixbuf.new_from_file_at_size(icon_name,
+																self.icon_size,
+																self.icon_size)
+			else:
+				icon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.icon_dir+"System.svg",
+																self.icon_size,
+																self.icon_size)
+		return icon
+
+
+	def set_categories(self,app,cteg):
+		"""applications set categories"""
+		if cteg == None:
+			self.categories["Other"].append(app)
+		else:
+			ctegs = cteg.split(";")
+			for c in ctegs:
+				if c in self.categories.keys():
+					self.categories[c].append(app)
+				elif c == "AudioVideo" or c == "Audio" or c == "Video":
+					if app not in self.categories["Multimedia"]:
+						self.categories["Multimedia"].append(app)
+		self.categories["All"].append(app)
+
+
+	def change_search_entry(self,widget):
+		search_text = widget.get_text().lower()
+		if search_text != "":
+			find_apps = []
+			for app in self.categories["All"]:
+				name = app[0]
+				desc = app[1]
+				if name == None:
+					name = ""
+				if desc == None:
+					desc = ""
+				name = name.lower()
+				desc = desc.lower()
+				if search_text in name or search_text in desc:
+					find_apps.append(app)
+			self.set_apps(find_apps)
+		else:
+			self.set_apps(self.categories["All"])
+
+
+	def set_scroll_win(self,list_):
+		"""Two scroll win maybe write a func"""
+		scroll = Gtk.ScrolledWindow()
+		scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+		scroll.add(list_)
+		return scroll
+
+
+	def set_categories_ui(self):
+		"""categories list add to store"""
+		for category in self.categories.keys():
+			if len(self.categories[category]) != 0:
+				icon = GdkPixbuf.Pixbuf.new_from_file(self.icon_dir+category+".svg")
+				self.cteg_store.append([icon,category])
+			elif category == "All":
+				icon = GdkPixbuf.Pixbuf.new_from_file(self.icon_dir+category+".svg")
+				self.cteg_store.append([icon,category])
+
+
+	def activated_cteg_list(self,widget):
+		selection = widget.get_selection()
+		tree_model, tree_iter = selection.get_selected()
+		categories = tree_model[tree_iter][1]
+		self.set_apps(self.categories[categories])
+
+
+	def activated_apps_list(self,widget,path):
+		"""Application start and close window"""
+		model = widget.get_model()
+		app = model[path][2]
+		app.launch(None,None)
+		if self.menu_close:
+			self.destroy()
+
+
+	def set_apps(self,apps):
+		"""Store clear and add"""
+		self.apps_store.clear()
+		for app in apps:
+			if app[2] == None:
+				p_b = GdkPixbuf.Pixbuf.new_from_file_at_size(self.icon_dir+"System.svg",
+															self.icon_size,
+															self.icon_size)
+			else:
+				p_b = self.get_icon(app[2].to_string())
+			self.apps_store.append([app[0],p_b,app[3]])
+
+
+
+if __name__ == '__main__':
+	pen = MMenu()
+	pen.connect("destroy", Gtk.main_quit)
+	pen.show_all()
+	Gtk.main()
