@@ -23,6 +23,8 @@ class MMenu(Gtk.Window):
 							"Other":[],}
 
 		#Menu Settings
+		self.set_type_hint(Gdk.WindowTypeHint.UTILITY)
+		self.set_decorated(False)
 		self.menu_with = 640
 		self.menu_height = 400
 		self.is_full_screen = False
@@ -31,6 +33,7 @@ class MMenu(Gtk.Window):
 		self.logout_command = ""
 		self.restart_command = ""
 		self.shutdown_command = ""
+		self.focus_out_destroy = True
 
 		self.d_icon_theme = Gtk.IconTheme.get_default()
 
@@ -46,6 +49,7 @@ class MMenu(Gtk.Window):
 menu_height = 400
 is_full_screen = 0
 menu_close = 1
+focus_out_destroy = 1
 icon_size = 32
 logout_command = xfce4-session-logout --logout
 restart_command = xfce4-session-logout --reboot
@@ -128,12 +132,18 @@ shutdown_command = xfce4-session-logout --fast""")
 
 		#Key press focus widget change
 		self.connect("key-press-event",self.key_press)
+		self.connect("focus-out-event",self.focus_change)
 
 		#Default Selection List
 		self.get_applications()
 		self.set_menu_position()
 		self.set_categories_ui()
 		self.cteg_list.set_cursor(0)
+
+
+	def focus_change(self,window,event):
+		if self.focus_out_destroy:
+			self.destroy()
 
 
 	def get_config_settings(self):
@@ -160,6 +170,8 @@ shutdown_command = xfce4-session-logout --fast""")
 					self.restart_command = dev
 				elif a[0] == "shutdown_command":
 					self.shutdown_command = dev
+				elif a[0] == "focus_out_destroy":
+					self.focus_out_destroy = int(dev)
 		except:
 			print("Not read config file")
 
@@ -193,12 +205,15 @@ shutdown_command = xfce4-session-logout --fast""")
 		Key press Enter run app,
 		Else focus entry"""
 		key_name = Gdk.keyval_name(event.keyval)
+		print(key_name)
 		arrow_keys = ["Up","Down","Left","Right"]
 		if key_name in arrow_keys:
 			self.apps_list.grab_focus()
 		elif key_name == "Return":
 			self.activated_apps_list(self.apps_list,
 									self.apps_list.get_selected_items()[0])
+		elif key_name == "Escape":
+			self.destroy()
 		else:
 			if not self.search_entry.is_focus():
 				self.search_entry.grab_focus()
