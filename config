@@ -1,8 +1,0 @@
-menu_with = 640
-menu_height = 400
-is_full_screen = 0
-menu_close = 1
-icon_size = 32
-logout_command = xfce4-session-logout --logout
-restart_command = xfce4-session-logout --reboot
-shutdown_command = xfce4-session-logout --fast

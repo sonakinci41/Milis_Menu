@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import gi, subprocess, os
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gio, Gtk, Gdk, GdkPixbuf
@@ -34,13 +35,23 @@ class MMenu(Gtk.Window):
 		self.d_icon_theme = Gtk.IconTheme.get_default()
 
 		#get local or other dir
-		self.config_dir = os.path.expanduser("~/.config/mmenu/")
-		if not os.path.exists(self.config_dir):
+		self.icon_dir = "/usr/share/mmenu/icons/"
+		self.config_dir = os.path.expanduser("~/.config/mmenu/config")
+		if not os.path.exists(self.icon_dir):
 			self.icon_dir = "./icons/"
-			self.config_dir = "config"
-		else:
-			self.icon_dir = os.path.expanduser("~/.config/mmenu/icons/")
-			self.config_dir = os.path.expanduser("~/.config/mmenu/config")
+		if not os.path.exists(os.path.expanduser("~/.config/mmenu/config")):
+			os.mkdir(os.path.expanduser("~/.config/mmenu/"))
+			f = open(os.path.expanduser("~/.config/mmenu/config"),"w")
+			f.write("""menu_with = 640
+menu_height = 400
+is_full_screen = 0
+menu_close = 1
+icon_size = 32
+logout_command = xfce4-session-logout --logout
+restart_command = xfce4-session-logout --reboot
+shutdown_command = xfce4-session-logout --fast""")
+			f.close()
+
 
 		self.get_config_settings()
 		################################ UI #################################
@@ -126,31 +137,34 @@ class MMenu(Gtk.Window):
 
 
 	def get_config_settings(self):
-		f = open(self.config_dir,"r")
-		read = f.readlines()
-		f.close()
-		for col in read:
-			a = col.split(" = ")
-			dev = a[1].replace("\n","")
-			if a[0] == "menu_with":
-				self.menu_with = int(dev)
-			elif a[0] == "menu_height":
-				self.menu_height = int(dev)
-			elif a[0] == "is_full_screen":
-				self.is_full_screen = int(dev)
-			elif a[0] == "menu_close":
-				self.menu_close = int(dev)
-			elif a[0] == "icon_size":
-				self.icon_size = int(dev)
-			elif a[0] == "logout_command":
-				self.logout_command = dev
-			elif a[0] == "restart_command":
-				self.restart_command = dev
-			elif a[0] == "shutdown_command":
-				self.shutdown_command = dev
+		try:
+			f = open(self.config_dir,"r")
+			read = f.readlines()
+			f.close()
+			for col in read:
+				a = col.split(" = ")
+				dev = a[1].replace("\n","")
+				if a[0] == "menu_with":
+					self.menu_with = int(dev)
+				elif a[0] == "menu_height":
+					self.menu_height = int(dev)
+				elif a[0] == "is_full_screen":
+					self.is_full_screen = int(dev)
+				elif a[0] == "menu_close":
+					self.menu_close = int(dev)
+				elif a[0] == "icon_size":
+					self.icon_size = int(dev)
+				elif a[0] == "logout_command":
+					self.logout_command = dev
+				elif a[0] == "restart_command":
+					self.restart_command = dev
+				elif a[0] == "shutdown_command":
+					self.shutdown_command = dev
+		except:
+			print("Not read config file")
 
 	def click_settings_button(self,widget):
-		print("SETTİNGS")
+		subprocess.call(["xdg-open",self.config_dir])
 
 
 	def click_logout_button(self,widget):
